@@ -1,3 +1,5 @@
+#ifndef ABOUTDIALOG_H
+#define ABOUTDIALOG_H
 /*  MiniMIDI: A simple, lightweight, crossplatform MIDI editor.
  *  Copyright (C) 2016 Nicholas Parkanyi
  *
@@ -14,4 +16,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <Fl/Fl_Window.H>
+#include <Fl/Fl_Text_Display.H>
+#include <Fl/Fl_Return_Button.H>
 
+class AboutDialog : public Fl_Window {
+public:
+  AboutDialog();
+
+  //v is a pointer to AboutDialog
+  static void cbClose(Fl_Widget* w, void* v);
+};
+
+#endif /* ABOUTDIALOG_H */

@@ -22,13 +22,25 @@
 
 MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 {
+  about_dialog = new AboutDialog();
+
+  begin();
+
   Fl_Menu_Item items[] = { { "&File", 0, 0, 0, FL_SUBMENU},
                            { "&Quit", 0, 0, 0},
                            { 0 },
                            { "&Help", 0, 0, 0, FL_SUBMENU},
                            { "Manual", 0, 0, 0},
+                           { "About", 0, cbAbout, this},
                            { 0 },
                            { 0 } };
   menu = new Fl_Menu_Bar(0, 0, RES_X, 30);
   menu->copy(items);
+
+  end();
+}
+
+void MainWindow::cbAbout(Fl_Widget* w, void* v)
+{
+  static_cast<MainWindow*>(v)->about_dialog->show();
 }

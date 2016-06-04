@@ -1,3 +1,5 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 /*  MiniMIDI: A simple, lightweight, crossplatform MIDI editor.
  *  Copyright (C) 2016 Nicholas Parkanyi
  *
@@ -15,6 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Fl/Fl_Window.H>
+#include "AboutDialog.h"
 
 class Fl_Menu_Bar;
 
@@ -22,6 +25,12 @@ class MainWindow : public Fl_Window {
 public:
   MainWindow();
 
+  //v pointer to the MainWindow
+  static void cbAbout(Fl_Widget* w, void* v);
+
 private:
   Fl_Menu_Bar* menu;
+  AboutDialog* about_dialog;
 };
+
+#endif
