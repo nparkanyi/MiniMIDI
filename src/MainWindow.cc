@@ -27,7 +27,7 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
   begin();
 
   Fl_Menu_Item items[] = { { "&File", 0, 0, 0, FL_SUBMENU},
-                           { "&Quit", 0, 0, 0},
+                           { "&Quit", 0, cbQuit, this},
                            { 0 },
                            { "&Help", 0, 0, 0, FL_SUBMENU},
                            { "Manual", 0, 0, 0},
@@ -43,4 +43,9 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 void MainWindow::cbAbout(Fl_Widget* w, void* v)
 {
   static_cast<MainWindow*>(v)->about_dialog->show();
+}
+
+void MainWindow::cbQuit(Fl_Widget* w, void* v)
+{
+  static_cast<MainWindow*>(v)->hide();
 }

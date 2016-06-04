@@ -27,6 +27,7 @@ public:
 
   //v pointer to the MainWindow
   static void cbAbout(Fl_Widget* w, void* v);
+  static void cbQuit(Fl_Widget* w, void* v);
 
 private:
   Fl_Menu_Bar* menu;
