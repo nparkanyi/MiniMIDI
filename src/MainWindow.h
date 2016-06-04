@@ -18,6 +18,7 @@
  */
 #include <Fl/Fl_Window.H>
 #include "AboutDialog.h"
+#include "SettingsDialog.h"
 
 class Fl_Menu_Bar;
 
@@ -27,11 +28,13 @@ public:
 
   //v pointer to the MainWindow
   static void cbAbout(Fl_Widget* w, void* v);
+  static void cbSettings(Fl_Widget* w, void* v);
   static void cbQuit(Fl_Widget* w, void* v);
 
 private:
   Fl_Menu_Bar* menu;
   AboutDialog* about_dialog;
+  SettingsDialog* settings_dialog;
 };
 
 #endif

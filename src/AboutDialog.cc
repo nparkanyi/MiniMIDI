@@ -15,12 +15,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "AboutDialog.h"
+#include <Fl/Fl_Group.H>
 #include "license_text.h"
 #define RESX 600
 #define RESY 400
 
 AboutDialog::AboutDialog() : Fl_Window(RESX, RESY)
 {
+  label("About MiniMIDI");
   Fl_Return_Button* btn = new Fl_Return_Button(RESX - 60, RESY - 40, 50, 30);
   btn->callback(cbClose, this);
   btn->label("OK");
@@ -29,8 +31,6 @@ AboutDialog::AboutDialog() : Fl_Window(RESX, RESY)
   buf->text(gpl_v3);
   Fl_Text_Display* dsp = new Fl_Text_Display(10, 70, RESX - 20, RESY - 120);
   dsp->buffer(buf);
-
-  end();
 }
 
 void AboutDialog::cbClose(Fl_Widget* w, void* v)

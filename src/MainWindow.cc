@@ -18,20 +18,27 @@
 #include "MainWindow.h"
 
 #define RES_X 1024
-#define RES_Y 768
+#define RES_Y 600
 
 MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 {
-  about_dialog = new AboutDialog();
+  label("MiniMIDI");
 
+  about_dialog = new AboutDialog();
+  begin();
+
+  settings_dialog = new SettingsDialog();
   begin();
 
   Fl_Menu_Item items[] = { { "&File", 0, 0, 0, FL_SUBMENU},
                            { "&Quit", 0, cbQuit, this},
                            { 0 },
+                           { "&Edit", 0, 0, 0, FL_SUBMENU},
+                           { "&Settings", 0, cbSettings, this},
+                           { 0 },
                            { "&Help", 0, 0, 0, FL_SUBMENU},
-                           { "Manual", 0, 0, 0},
-                           { "About", 0, cbAbout, this},
+                           { "&Manual", 0, 0, 0},
+                           { "&About", 0, cbAbout, this},
                            { 0 },
                            { 0 } };
   menu = new Fl_Menu_Bar(0, 0, RES_X, 30);
@@ -43,6 +50,11 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 void MainWindow::cbAbout(Fl_Widget* w, void* v)
 {
   static_cast<MainWindow*>(v)->about_dialog->show();
+}
+
+void MainWindow::cbSettings(Fl_Widget* w, void* v)
+{
+  static_cast<MainWindow*>(v)->settings_dialog->show();
 }
 
 void MainWindow::cbQuit(Fl_Widget* w, void* v)
