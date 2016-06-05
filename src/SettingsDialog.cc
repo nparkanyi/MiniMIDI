@@ -15,6 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cstring>
+#include <cstdio>
 #include <Fl/Fl.H>
 #include "SettingsDialog.h"
 #include <Fl/Fl_Choice.H>
@@ -37,6 +38,16 @@ SettingsDialog::SettingsDialog() : Fl_Window(RESX, RESY)
   scheme_choice->copy(schemes);
   scheme_choice->callback(cbChangeScheme);
   scheme_choice->value(schemeIndex());
+
+  Fl_Menu_Item colours[] = {{ "Light", 0, 0, 0},
+                         { "Medium", 0, 0, 0},
+                         { "Dark", 0, 0, 0},
+                         { "UNIX Wizard", 0, 0, 0},
+                         { 0 }};
+  Fl_Choice* colour_choice = new Fl_Choice(410, 10, 100, 30, "Colour Scheme:");
+  colour_choice->copy(colours);
+  colour_choice->callback(cbChangeColour);
+  colour_choice->value(colourIndex());
 
   Fl_Return_Button* btn = new Fl_Return_Button(RESX - 60, RESY - 40, 50, 30);
   btn->callback(cbClose, this);
@@ -61,12 +72,57 @@ void SettingsDialog::cbChangeScheme(Fl_Widget* w, void *v)
       Fl::scheme("standard");
       break;
   }
+  Fl::redraw();
+}
+
+void SettingsDialog::cbChangeColour(Fl_Widget* w, void* v)
+{
+  int choice = static_cast<Fl_Choice*>(w)->value();
+
+  switch(choice){
+    case 0: //Light
+      Fl::background(242, 241, 240);
+      Fl::background2(255, 255, 255);
+      Fl::foreground(60, 60, 60);
+      break;
+    case 1: //Medium
+      Fl::background(192, 192, 192);
+      Fl::background2(255, 255, 255);
+      Fl::foreground(0, 0, 0);
+      break;
+    case 2: //Dark
+      Fl::background(74, 72, 66);
+      Fl::background2(90, 90, 90);
+      Fl::foreground(223, 219, 210);
+      break;
+    case 3: //UNIX Wizard
+      Fl::background(0, 0, 0);
+      Fl::background2(30, 30, 30);
+      Fl::foreground(0, 255, 0);
+      break;
+  }
+  Fl::redraw();
 }
 
 void SettingsDialog::cbClose(Fl_Widget* w, void* v)
 {
   Fl_Preferences* prefs = new Fl_Preferences(Fl_Preferences::USER, "MiniMIDI", "MiniMIDI");
   prefs->set("scheme", Fl::scheme());
+
+  unsigned char r, g, b;
+  Fl::get_color(FL_BACKGROUND_COLOR, r, g, b);
+  prefs->set("bg_r", r);
+  prefs->set("bg_g", g);
+  prefs->set("bg_b", b);
+  Fl::get_color(FL_BACKGROUND2_COLOR, r, g, b);
+  prefs->set("bg2_r", r);
+  prefs->set("bg2_g", g);
+  prefs->set("bg2_b", b);
+  Fl::get_color(FL_FOREGROUND_COLOR, r, g, b);
+  prefs->set("fg_r", r);
+  prefs->set("fg_g", g);
+  prefs->set("fg_b", b);
+
   prefs->flush();
 
   static_cast<SettingsDialog*>(v)->hide();
@@ -86,5 +142,28 @@ int SettingsDialog::schemeIndex()
     return 3;
   } else {
     return 0;
+  }
+}
+
+int SettingsDialog::colourIndex()
+{
+  unsigned char r, g, b;
+
+  Fl::get_color(FL_BACKGROUND_COLOR, r, g, b);
+
+  printf("%d\n", r);
+  switch(r){ //identify colour scheme from r value
+    case 242: //Light
+      return 0;
+      break;
+    case 192: //Medium
+      return 1;
+      break;
+    case 74: //Dark
+      return 2;
+      break;
+    default: //UNIX Wizard
+      return 3;
+      break;
   }
 }

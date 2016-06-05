@@ -29,7 +29,9 @@ public:
   static void cbChangeScheme(Fl_Widget* w, void* v);
 
 private:
+  //these return the dropdown index of the current widget and colour schemes
   int schemeIndex();
+  int colourIndex();
 };
 
 #endif /* SETTINGSDIALOG_H */
