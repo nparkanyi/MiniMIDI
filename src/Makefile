@@ -11,4 +11,4 @@ SettingsDialog.o: SettingsDialog.h SettingsDialog.cc
 	${CXX} SettingsDialog.cc -c `fltk-config --cxxflags --ldstaticflags`
 
 clean:
-	rm MiniMIDI
+	rm MiniMIDI; rm *.o

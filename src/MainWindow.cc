@@ -15,7 +15,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Fl/Fl_Menu_Bar.H>
+#include <Fl/Fl_Pixmap.H>
+#include <Fl/Fl_Image.H>
 #include "MainWindow.h"
+#include "notes_pixmap.h"
 
 #define RES_X 1024
 #define RES_Y 600
@@ -23,6 +26,10 @@
 MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 {
   label("MiniMIDI");
+
+  Fl_Pixmap* px = new Fl_Pixmap(notes_pixmap);
+  Fl_RGB_Image* icon_image = new Fl_RGB_Image(px);
+  icon(icon_image);
 
   about_dialog = new AboutDialog();
   begin();
