@@ -14,6 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <cstring>
 #include <Fl/Fl.H>
 #include "SettingsDialog.h"
 #include <Fl/Fl_Choice.H>
@@ -35,6 +36,7 @@ SettingsDialog::SettingsDialog() : Fl_Window(RESX, RESY)
   Fl_Choice* scheme_choice = new Fl_Choice(150, 10, 100, 30, "Widget Scheme:");
   scheme_choice->copy(schemes);
   scheme_choice->callback(cbChangeScheme);
+  scheme_choice->value(schemeIndex());
 
   Fl_Return_Button* btn = new Fl_Return_Button(RESX - 60, RESY - 40, 50, 30);
   btn->callback(cbClose, this);
@@ -68,4 +70,21 @@ void SettingsDialog::cbClose(Fl_Widget* w, void* v)
   prefs->flush();
 
   static_cast<SettingsDialog*>(v)->hide();
+}
+
+int SettingsDialog::schemeIndex()
+{
+  const char* scheme = Fl::scheme();
+
+  if (std::strcmp("gtk+", scheme) == 0){
+    return 0;
+  } else if (std::strcmp("plastic", scheme) == 0){
+    return 1;
+  } else if (std::strcmp("gleam", scheme) == 0){
+    return 2;
+  } else if (std::strcmp("standard", scheme) == 0){
+    return 3;
+  } else {
+    return 0;
+  }
 }

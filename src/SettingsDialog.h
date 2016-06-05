@@ -27,6 +27,9 @@ public:
   static void cbClose(Fl_Widget* w, void* v);
   static void cbChangeColour(Fl_Widget* w, void* v);
   static void cbChangeScheme(Fl_Widget* w, void* v);
+
+private:
+  int schemeIndex();
 };
 
 #endif /* SETTINGSDIALOG_H */
