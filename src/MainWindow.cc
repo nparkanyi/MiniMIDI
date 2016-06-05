@@ -30,6 +30,8 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
   Fl_Pixmap* px = new Fl_Pixmap(notes_pixmap);
   Fl_RGB_Image* icon_image = new Fl_RGB_Image(px);
   icon(icon_image);
+  delete px;
+  delete icon_image;
 
   about_dialog = new AboutDialog();
   begin();
