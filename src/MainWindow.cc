@@ -31,7 +31,7 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
   begin();
 
   Fl_Menu_Item items[] = { { "&File", 0, 0, 0, FL_SUBMENU},
-                           { "&Quit", 0, cbQuit, this},
+                           { "&Quit", FL_COMMAND + 'q', cbQuit, this},
                            { 0 },
                            { "&Edit", 0, 0, 0, FL_SUBMENU},
                            { "&Settings", 0, cbSettings, this},
