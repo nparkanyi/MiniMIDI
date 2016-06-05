@@ -4,7 +4,7 @@ MiniMIDI: main.cc MainWindow.o AboutDialog.o SettingsDialog.o
 MainWindow.o: MainWindow.h MainWindow.cc
 	${CXX} MainWindow.cc -c `fltk-config --cxxflags --ldstaticflags`
 
-AboutDialog.o: AboutDialog.h AboutDialog.cc
+AboutDialog.o: AboutDialog.h AboutDialog.cc notes_pixmap.h license_text.h
 	${CXX} AboutDialog.cc -c `fltk-config --cxxflags --ldstaticflags`
 
 SettingsDialog.o: SettingsDialog.h SettingsDialog.cc

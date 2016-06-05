@@ -16,20 +16,33 @@
  */
 #include "AboutDialog.h"
 #include <Fl/Fl_Group.H>
+#include <Fl/Fl_Box.H>
+#include <Fl/Fl_Pixmap.H>
 #include "license_text.h"
+#include "notes_pixmap.h"
 #define RESX 600
-#define RESY 400
+#define RESY 360 
 
 AboutDialog::AboutDialog() : Fl_Window(RESX, RESY)
 {
   label("About MiniMIDI");
+
   Fl_Return_Button* btn = new Fl_Return_Button(RESX - 60, RESY - 40, 50, 30);
   btn->callback(cbClose, this);
   btn->label("OK");
 
+  Fl_Pixmap* pixmap = new Fl_Pixmap(notes_pixmap);
+  Fl_Box* logo = new Fl_Box(FL_UP_BOX, RESX / 2 - 50, 10, 100, 80, "MiniMIDI");
+  logo->image(pixmap);
+  logo->labeltype(FL_NORMAL_LABEL);
+  logo->labelsize(18);
+
+  Fl_Box* copyright = new Fl_Box(FL_NO_BOX, RESX / 2 - 100, 100, 200, 20, "Copyright © 2016 Nicholas Parkanyi");
+  copyright->align(FL_ALIGN_CENTER);
+
   Fl_Text_Buffer* buf = new Fl_Text_Buffer();
   buf->text(gpl_v3);
-  Fl_Text_Display* dsp = new Fl_Text_Display(10, 70, RESX - 20, RESY - 120);
+  Fl_Text_Display* dsp = new Fl_Text_Display(10, 130, RESX - 20, RESY - 180);
   dsp->buffer(buf);
 }
 

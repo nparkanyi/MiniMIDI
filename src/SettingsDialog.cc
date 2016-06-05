@@ -31,7 +31,7 @@ SettingsDialog::SettingsDialog() : Fl_Window(RESX, RESY)
                          { "Gleam", 0, 0, 0},
                          { "Standard", 0, 0, 0},
                          { 0 }};
-  Fl_Choice* scheme_choice = new Fl_Choice(150, 10, 70, 20, "Widget Scheme:");
+  Fl_Choice* scheme_choice = new Fl_Choice(150, 10, 100, 30, "Widget Scheme:");
   scheme_choice->copy(schemes);
   scheme_choice->callback(cbChangeScheme);
 
