@@ -27,11 +27,9 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 {
   label("MiniMIDI");
 
-  Fl_Pixmap* px = new Fl_Pixmap(notes_pixmap);
-  Fl_RGB_Image* icon_image = new Fl_RGB_Image(px);
-  icon(icon_image);
-  delete px;
-  delete icon_image;
+  Fl_Pixmap px(notes_pixmap);
+  Fl_RGB_Image icon_image(&px);
+  icon(&icon_image);
 
   about_dialog = new AboutDialog();
   begin();
@@ -56,6 +54,13 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
   end();
 }
 
+void MainWindow::quit()
+{
+  about_dialog->hide();
+  settings_dialog->hide();
+  hide();
+}
+
 void MainWindow::cbAbout(Fl_Widget* w, void* v)
 {
   static_cast<MainWindow*>(v)->about_dialog->show();
@@ -68,5 +73,5 @@ void MainWindow::cbSettings(Fl_Widget* w, void* v)
 
 void MainWindow::cbQuit(Fl_Widget* w, void* v)
 {
-  static_cast<MainWindow*>(v)->hide();
+  static_cast<MainWindow*>(v)->quit();
 }

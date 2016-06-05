@@ -15,7 +15,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cstring>
-#include <cstdio>
 #include <Fl/Fl.H>
 #include "SettingsDialog.h"
 #include <Fl/Fl_Choice.H>
@@ -151,7 +150,6 @@ int SettingsDialog::colourIndex()
 
   Fl::get_color(FL_BACKGROUND_COLOR, r, g, b);
 
-  printf("%d\n", r);
   switch(r){ //identify colour scheme from r value
     case 242: //Light
       return 0;

@@ -25,6 +25,7 @@ class Fl_Menu_Bar;
 class MainWindow : public Fl_Window {
 public:
   MainWindow();
+  void quit(); //closes all child windows before quitting
 
   //v pointer to the MainWindow
   static void cbAbout(Fl_Widget* w, void* v);
