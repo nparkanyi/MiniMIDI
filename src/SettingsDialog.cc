@@ -19,6 +19,7 @@
 #include <Fl/Fl_Choice.H>
 #include <Fl/Fl_Menu_Item.H>
 #include <Fl/Fl_Return_Button.H>
+#include <Fl/Fl_Preferences.H>
 #define RESX 700
 #define RESY 100
 
@@ -62,5 +63,9 @@ void SettingsDialog::cbChangeScheme(Fl_Widget* w, void *v)
 
 void SettingsDialog::cbClose(Fl_Widget* w, void* v)
 {
+  Fl_Preferences* prefs = new Fl_Preferences(Fl_Preferences::USER, "MiniMIDI", "MiniMIDI");
+  prefs->set("scheme", Fl::scheme());
+  prefs->flush();
+
   static_cast<SettingsDialog*>(v)->hide();
 }

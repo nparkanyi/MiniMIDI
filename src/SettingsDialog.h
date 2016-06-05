@@ -17,6 +17,7 @@
    *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
    */
 #include <Fl/Fl_Window.H>
+#include <Fl/Fl_Choice.H>
 
 class SettingsDialog : public Fl_Window
 {

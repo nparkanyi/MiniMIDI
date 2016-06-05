@@ -21,7 +21,7 @@
 #include "license_text.h"
 #include "notes_pixmap.h"
 #define RESX 600
-#define RESY 360 
+#define RESY 360
 
 AboutDialog::AboutDialog() : Fl_Window(RESX, RESY)
 {

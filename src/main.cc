@@ -15,11 +15,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <Fl/Fl.H>
+#include <Fl/Fl_Preferences.H>
 #include "MainWindow.h"
+
+void loadPrefs()
+{
+  Fl_Preferences* prefs = new Fl_Preferences(Fl_Preferences::USER,
+                                             "MiniMIDI", "MiniMIDI");
+  char* scheme;
+  prefs->get("scheme", scheme, "gtk+");
+  Fl::scheme(scheme);
+}
 
 int main(int argc, char** argv)
 {
-  Fl::scheme("gtk+");
+  loadPrefs();
 
   MainWindow* win = new MainWindow();
   win->end();
