@@ -31,6 +31,9 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
   Fl_RGB_Image icon_image(&px);
   icon(&icon_image);
 
+  view = new Viewport(10, 40, RES_X - 20, RES_Y - 50);
+  resizable(view);
+
   about_dialog = new AboutDialog();
   begin();
 

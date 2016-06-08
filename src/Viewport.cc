@@ -1,5 +1,3 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 /*  MiniMIDI: A simple, lightweight, crossplatform MIDI editor.
  *  Copyright (C) 2016 Nicholas Parkanyi
  *
@@ -16,28 +14,26 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <Fl/Fl_Window.H>
 #include "Viewport.h"
-#include "AboutDialog.h"
-#include "SettingsDialog.h"
+#include <Fl/fl_draw.H>
 
-class Fl_Menu_Bar;
+Viewport::Viewport(int x, int y, int w, int h) : Fl_Box(FL_EMBOSSED_FRAME,
+                                                        x, y, w, h, "")
+{
+}
 
-class MainWindow : public Fl_Window {
-public:
-  MainWindow();
-  void quit(); //closes all child windows before quitting
+void Viewport::draw()
+{
+  fl_rectf(x(), y(), w(), h(), 0, 0, 0);
 
-  //v pointer to the MainWindow
-  static void cbAbout(Fl_Widget* w, void* v);
-  static void cbSettings(Fl_Widget* w, void* v);
-  static void cbQuit(Fl_Widget* w, void* v);
+  fl_color(fl_rgb_color(255, 0, 0));
+  for (int i = x(); i < x() + w(); i+= 20){
+    fl_line(i, y(), i, y() + h() - 1);
+  }
+  Fl_Box::draw();
+}
 
-private:
-  Fl_Menu_Bar* menu;
-  Viewport* view;
-  AboutDialog* about_dialog;
-  SettingsDialog* settings_dialog;
-};
-
-#endif
+int Viewport::handle(int event)
+{
+  return Fl_Box::handle(event);
+}
