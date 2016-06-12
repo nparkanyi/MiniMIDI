@@ -41,6 +41,7 @@ public:
   Viewport(int x, int y, int w, int h);
 
   virtual void draw();
+  virtual void resize(int x, int y, int w, int h);
   virtual int handle(int event);
 
 private:
