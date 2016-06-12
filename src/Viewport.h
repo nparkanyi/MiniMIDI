@@ -33,6 +33,8 @@ public:
 private:
   int x, y, w, h;
   int key_width;
+  int n; //due to truncation of key_width, there is a gap at the right of keyboard,
+         //so every nth white note gets extra pixel to fill it.
 };
 
 
