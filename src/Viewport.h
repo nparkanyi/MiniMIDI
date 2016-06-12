@@ -16,8 +16,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <array>
 #include <Fl/Fl.H>
 #include <Fl/Fl_Box.H>
+
+
+class Keyboard {
+public:
+  Keyboard(int x, int y, int w, int h);
+
+  void draw(std::array<bool, 88> &key_states) const;
+  void draw() const;
+  void move(int x, int y);
+  void resize(int w, int h);
+
+private:
+  int x, y, w, h;
+  int key_width;
+};
+
 
 class Viewport : public Fl_Box {
 public:
@@ -25,5 +42,10 @@ public:
 
   virtual void draw();
   virtual int handle(int event);
+
+private:
+  Keyboard keyboard;
+
 };
+
 #endif /* VIEWPORT_H */
