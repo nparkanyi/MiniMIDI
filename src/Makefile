@@ -2,7 +2,7 @@ FLAGS = --std=c++11 -g
 FLFLAGS = `fltk-config --cxxflags`
 
 MiniMIDI: main.cc MainWindow.o Viewport.o AboutDialog.o SettingsDialog.o
-	${CXX} main.cc  $(FLAGS) MainWindow.o Viewport.o AboutDialog.o SettingsDialog.o -o MiniMIDI $(fltk-config) `fltk-config --ldstaticflags`
+	${CXX} main.cc  $(FLAGS) MainWindow.o Viewport.o AboutDialog.o SettingsDialog.o -o MiniMIDI $(FLFLAGS) `fltk-config --ldstaticflags`
 
 MainWindow.o: MainWindow.h MainWindow.cc
 	${CXX} MainWindow.cc $(FLAGS) -c $(FLFLAGS)
