@@ -71,7 +71,7 @@ void Keyboard::draw(std::array<bool, 88> &key_states) const
                0, 0, 0);
       if (!key_states[i])
         colour = fl_rgb_color(0, 0, 0);
-      fl_rectf(2 + x + offset - key_width * 3 / 8, y, black_width, black_height,
+      fl_rectf(2 + x + offset - key_width * 3 / 8, y, black_width - 4, black_height - 4,
                colour);
     } else {
       if (whites % n == 0)
