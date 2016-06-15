@@ -119,10 +119,6 @@ void Viewport::draw()
 {
   fl_rectf(x(), y(), w(), h(), 0, 0, 0);
 
-  fl_color(fl_rgb_color(255, 0, 0));
-  for (int i = x(); i < x() + w(); i+= 20){
-    fl_line(i, y(), i, y() + h() - 1);
-  }
   keyboard.draw();
   Fl_Box::draw();
 }
