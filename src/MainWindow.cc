@@ -68,6 +68,7 @@ void PlaybackControls::cbFwd(Fl_Widget* w, void* v)
 MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 {
   label("MiniMIDI");
+  size_range(920, 600);
 
   Fl_Pixmap px(notes_pixmap);
   Fl_RGB_Image icon_image(&px);
