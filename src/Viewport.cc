@@ -23,7 +23,7 @@
 Keyboard::Keyboard(int x, int y, int w, int h) : x(x), y(y), w(w), h(h)
 {
   key_width = w / 52; //key_width is the width of a white key
-  n = std::ceil(1.0f / (static_cast<float>(w) / 52.0f - key_width));
+  n = std::ceil(2.0f / (static_cast<float>(w) / 52.0f - key_width));
 }
 
 
@@ -47,7 +47,7 @@ void Keyboard::draw(std::array<bool, 88> &key_states) const
         && i % 12 != 9){ //white notes
       key_width = this->key_width;
       if (whites % n == 0)
-        key_width++;
+        key_width += 2;
       fl_rectf(x + offset + 1, y, key_width - 2, h, colour);
       offset += key_width;
       whites++;
@@ -75,7 +75,7 @@ void Keyboard::draw(std::array<bool, 88> &key_states) const
                colour);
     } else {
       if (whites % n == 0)
-        key_width++;
+        key_width += 2;
       offset += key_width;
       whites++;
     }
@@ -95,7 +95,7 @@ void Keyboard::resize(int w, int h)
   this->w = w;
   this->h = h;
   key_width = w / 52;
-  n = std::ceil(1.0f / (static_cast<float>(w) / 52.0f - key_width));
+  n = std::ceil(2.0f / (static_cast<float>(w) / 52.0f - key_width));
 }
 
 

@@ -17,11 +17,53 @@
 #include <Fl/Fl_Menu_Bar.H>
 #include <Fl/Fl_Pixmap.H>
 #include <Fl/Fl_Image.H>
+#include <Fl/Fl_Button.H>
 #include "MainWindow.h"
 #include "notes_pixmap.h"
 
 #define RES_X 1024
 #define RES_Y 600
+
+
+PlaybackControls::PlaybackControls(int x, int y, int w, int h, Viewport* view) :
+                                    Fl_Group(x, y, w, h), view(view)
+{
+  resizable(NULL);
+  Fl_Button* rwd = new Fl_Button(x, y, w / 3 - 5, w / 3 - 5, "@<<");
+  rwd->callback(cbRwd, view);
+
+  Fl_Button* play = new Fl_Button(x + w / 3 + 5, y, w / 3 - 5, w / 3 - 5, "@>");
+  play->callback(cbPlay, view);
+
+  Fl_Button* fwd = new Fl_Button(x + 2 * w / 3 + 10, y, w / 3 - 5, w / 3 - 5, "@>>");
+  fwd->callback(cbRwd, view);
+}
+
+
+void PlaybackControls::cbPlay(Fl_Widget* w, void* v)
+{
+  static bool playing = false;
+  Fl_Button* play = static_cast<Fl_Button*>(w);
+
+  if (!playing){
+    playing = true;
+    play->label("@||");
+  } else {
+    playing = false;
+    play->label("@>");
+  }
+}
+
+
+void PlaybackControls::cbRwd(Fl_Widget* w, void* v)
+{
+}
+
+
+void PlaybackControls::cbFwd(Fl_Widget* w, void* v)
+{
+}
+
 
 MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 {
@@ -31,7 +73,7 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
   Fl_RGB_Image icon_image(&px);
   icon(&icon_image);
 
-  view = new Viewport(10, 40, RES_X - 20, RES_Y - 50);
+  view = new Viewport(10, 40, RES_X - 20, RES_Y - 100);
   resizable(view);
 
   about_dialog = new AboutDialog();
@@ -53,6 +95,10 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
                            { 0 } };
   menu = new Fl_Menu_Bar(0, 0, RES_X, 30);
   menu->copy(items);
+
+  PlaybackControls* playback = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50,
+                                                    140, 40, view);
+  playback->end();
 
   end();
 }

@@ -23,6 +23,20 @@
 
 class Fl_Menu_Bar;
 
+
+class PlaybackControls : public Fl_Group {
+public:
+  PlaybackControls(int x, int y, int w, int h, Viewport *view);
+
+private:
+  Viewport* view;
+
+  static void cbPlay(Fl_Widget* w, void* v);
+  static void cbRwd(Fl_Widget* w, void* v);
+  static void cbFwd(Fl_Widget* w, void* v);
+};
+
+
 class MainWindow : public Fl_Window {
 public:
   MainWindow();
