@@ -41,6 +41,7 @@ class MainWindow : public Fl_Window {
 public:
   MainWindow();
   void quit(); //closes all child windows before quitting
+  virtual void resize(int x, int y, int w, int h);
 
   //v pointer to the MainWindow
   static void cbAbout(Fl_Widget* w, void* v);
@@ -50,6 +51,7 @@ public:
 private:
   Fl_Menu_Bar* menu;
   Viewport* view;
+  PlaybackControls* controls;
   AboutDialog* about_dialog;
   SettingsDialog* settings_dialog;
 };

@@ -97,18 +97,9 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
   menu = new Fl_Menu_Bar(0, 0, RES_X, 30);
   menu->copy(items);
 
-  //padding to keep the buttons centred
-  Fl_Group* left_pad = new Fl_Group(0, RES_Y - 50, RES_X / 2, 40);
-  left_pad->resizable(new Fl_Box(0, RES_Y - 50, RES_X / 2 - 70, 40));
-
-  PlaybackControls* playback = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50,
+  controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50,
                                                     140, 40, view);
-  playback->end();
-
-  Fl_Group* right_pad = new Fl_Group(RES_X / 2, RES_Y - 50, RES_X / 2, 40);
-  right_pad->end();
-
-  end();
+  controls->end();
 }
 
 void MainWindow::quit()
@@ -118,15 +109,26 @@ void MainWindow::quit()
   hide();
 }
 
+
+void MainWindow::resize(int x, int y, int w, int h)
+{
+  Fl_Window::resize(x, y, w, h);
+  //keep the playback controls centred
+  controls->position(w / 2 - 70, controls->y());
+}
+
+
 void MainWindow::cbAbout(Fl_Widget* w, void* v)
 {
   static_cast<MainWindow*>(v)->about_dialog->show();
 }
 
+
 void MainWindow::cbSettings(Fl_Widget* w, void* v)
 {
   static_cast<MainWindow*>(v)->settings_dialog->show();
 }
+
 
 void MainWindow::cbQuit(Fl_Widget* w, void* v)
 {
