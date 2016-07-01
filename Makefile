@@ -1,3 +1,5 @@
+all: MiniMIDI
+
 MiniMIDI: $(wildcard src/*.cc) $(wildcard src/*.h)
 	cd src; make;
 	cp src/MiniMIDI ./
