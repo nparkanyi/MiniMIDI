@@ -1,4 +1,4 @@
-#ifdef MIDI_H
+#ifndef MIDI_H
 #define MIDI_H
 /*  MiniMIDI: A simple, lightweight, crossplatform MIDI editor.
  *  Copyright (C) 2016 Nicholas Parkanyi
