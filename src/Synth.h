@@ -17,13 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <string>
-#include "fluidsynth.h"
- 
+#include <fluidsynth.h>
+
  class Synth {
  public:
-    Synth(std::string driver, std::string sf2_file);
+    Synth(std::string driver, std::string sf_file);
     ~Synth();
-    
+
     //whether fluidsynth was successfully loaded, if it fails, playback will be silent
     bool initialized();
     void reload(std::string driver, std::string sf_file);
@@ -31,7 +31,7 @@
     std::string getSF();
     void noteOn(short value, int velocity);
     void noteOff(short value);
-    
+
 private:
     bool is_initialized;
     std::string driver;
@@ -40,6 +40,6 @@ private:
     fluid_synth_t* synth;
     fluid_audio_driver_t* adriver;
     int sf_handle;
-}
- 
+};
+
 #endif /* SYNTH_H */

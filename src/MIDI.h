@@ -20,16 +20,18 @@
 #include <string>
 #include <memory>
 #include <map>
+#include "Synth.h"
 
-class MIDIPlayback;
+class Playback;
 class NoteEditor;
+class MIDI;
 
 class Event {
 public:
-    Event(MIDIPlayback* play, NoteEditor* editor, std::string type, unsigned long time)
+    Event(Playback* play, NoteEditor* editor, std::string type, unsigned long time)
           : play(play), editor(editor), type(type), time(time) {}
     virtual ~Event(){}
-    
+
     std::string getType() const { return type; }
     unsigned long getTime() const { return time; }
     //executed when we reach this event during playback
@@ -37,62 +39,85 @@ public:
     //
     virtual void draw() = 0;
 
-private:
-    MIDIPlayback* play;
+protected:
+    Playback* play;
     NoteEditor* editor;
+
+private:
     std::string type;
     //absolute time the event occurs, in ms
     unsigned long time;
-}
+};
 
-class Note : public Event {
+class NoteOn : public Event {
 public:
-    Note(MIDIPlayback* play, NoteEditor* editor, short value, int duration);
-    virtual ~Note();
-    
+    NoteOn(Playback* play, NoteEditor* editor, unsigned long time, short value,
+         short velocity, int duration);
+
     short getValue() const;
     int getDuration() const;
     virtual void run();
     virtual void draw();
-    
+
 private:
     short value;
+    short velocity;
+    //time until associated noteOff event, stored to simplify drawing
     int duration;
-}
+};
+
+class NoteOff : public Event {
+public:
+    NoteOff(Playback* play, NoteEditor* editor, unsigned long time, short value);
+
+    short getValue() const;
+    virtual void run();
+    virtual void draw();
+
+private:
+    short value;
+};
 
 class Track {
 public:
     Track();
-        
+
     //returns the total duration of this track in ms
     unsigned long getDuration() const;
     void addEvent(std::shared_ptr<Event> ev);
     void removeEvent(std::shared_ptr<Event> ev);
-    //returns vector of events occuring at this time
-    std::vector<std::shared_ptr<Event>>* getEventsAt(unsigned long time) const;
-    //this track's notes will be drawn in this colour on the NoteEditor
+    //returns vector of events occurring at this time
+    std::vector<std::shared_ptr<Event>>& getEventsAt(unsigned long time) const;
+    //this track's NoteOns will be drawn in this colour on the NoteOnEditor
     void setColour(char r, char g, char b);
     void getColour(char &r, char &g, char &b) const;
-    
+
 private:
     std::vector<std::shared_ptr<Event>> events;
     char r, g, b;
-}
+};
 
 class Playback {
 public:
-    Playback(MIDI* parent);
-    
+    Playback(MIDI* instance, Synth* synth);
+
     //current playback time
     unsigned long getTime() const;
+    Synth* getSynth() const;
     void seek(unsigned long time);
     void pause();
     void play();
-    
+
 private:
-    MIDI* parent;
+    MIDI* instance;
+    Synth* synth;
     unsigned long start_time;
     bool playing;
-}
+};
+
+class MIDI {
+public:
+    MIDI();
+};
 
 #endif /* MIDI_H */
