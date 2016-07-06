@@ -26,7 +26,8 @@ class Fl_Menu_Bar;
 
 class PlaybackControls : public Fl_Group {
 public:
-  PlaybackControls(int x, int y, int w, int h, Viewport *view);
+  PlaybackControls(int x, int y, Viewport *view);
+  virtual void resize(int x, int y, int w, int h);
 
 private:
   Viewport* view;

@@ -25,20 +25,27 @@
 #define RES_Y 600
 
 
-PlaybackControls::PlaybackControls(int x, int y, int w, int h, Viewport* view) :
-                                    Fl_Group(x, y, w, h), view(view)
+PlaybackControls::PlaybackControls(int x, int y, Viewport* view) :
+                                    Fl_Group(x, y, 140, 40), view(view)
 {
   resizable(NULL);
-  Fl_Button* rwd = new Fl_Button(x, y, w / 3 - 5, w / 3 - 5, "@<<");
+  Fl_Button* rwd = new Fl_Button(x, y, 40, 40, "@<<");
   rwd->callback(cbRwd, view);
 
-  Fl_Button* play = new Fl_Button(x + w / 3 + 5, y, w / 3 - 5, w / 3 - 5, "@>");
+  Fl_Button* play = new Fl_Button(x + 50, y, 40, 40, "@>");
   play->callback(cbPlay, view);
 
-  Fl_Button* fwd = new Fl_Button(x + 2 * w / 3 + 10, y, w / 3 - 5, w / 3 - 5, "@>>");
+  Fl_Button* fwd = new Fl_Button(x + 100, y, 40, 40, "@>>");
   fwd->callback(cbRwd, view);
 }
 
+void PlaybackControls::resize(int x, int y, int w, int h)
+{
+    //ignore w and h, prevent widget from being resized
+    //otherwise, it gets shrunk with the window and the buttons
+    //fall outside the dimensions, so the user can't click them
+    Fl_Group::resize(x, y, 140, 40);
+}
 
 void PlaybackControls::cbPlay(Fl_Widget* w, void* v)
 {
@@ -97,8 +104,7 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
   menu = new Fl_Menu_Bar(0, 0, RES_X, 30);
   menu->copy(items);
 
-  controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50,
-                                                    140, 40, view);
+  controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50, view);
   controls->end();
 }
 
