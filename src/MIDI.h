@@ -19,7 +19,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <map>
+#include <chrono>
 #include "Synth.h"
 
 class Playback;
@@ -36,7 +36,7 @@ public:
     unsigned long getTime() const { return time; }
     //executed when we reach this event during playback
     virtual void run() = 0;
-    //
+    //executed when the note is to be drawn on the note editor
     virtual void draw() = 0;
 
 protected:
@@ -87,7 +87,7 @@ public:
     void addEvent(std::shared_ptr<Event> ev);
     void removeEvent(std::shared_ptr<Event> ev);
     //returns vector of events occurring at this time
-    std::vector<std::shared_ptr<Event>>& getEventsAt(unsigned long time) const;
+    std::vector<std::shared_ptr<Event>> getEventsAt(unsigned long time) const;
     //this track's NoteOns will be drawn in this colour on the NoteOnEditor
     void setColour(char r, char g, char b);
     void getColour(char &r, char &g, char &b) const;
@@ -99,19 +99,22 @@ private:
 
 class Playback {
 public:
-    Playback(MIDI* instance, Synth* synth);
+    //driver and soundfont file for the synthesizer
+    Playback(std::string driver, std::string sf_file);
 
     //current playback time
     unsigned long getTime() const;
-    Synth* getSynth() const;
+    const Synth* getSynth() const;
     void seek(unsigned long time);
     void pause();
     void play();
 
 private:
     MIDI* instance;
-    Synth* synth;
-    unsigned long start_time;
+    Synth synth;
+    std::chrono::steady_clock::time_point start_time;
+    //for storing the time when we pause
+    unsigned long time_elapsed;
     bool playing;
 };
 

@@ -85,7 +85,7 @@ void Track::removeEvent(std::shared_ptr<Event> ev)
     }
 }
 
-std::vector<std::shared_ptr<Event>>& Track::getEventsAt(unsigned long time) const
+std::vector<std::shared_ptr<Event>> Track::getEventsAt(unsigned long time) const
 {
     std::vector<std::shared_ptr<Event>> found;
     int size = events.size();
@@ -129,3 +129,42 @@ void Track::getColour(char &r, char &g, char &b) const
     b = this->b;
 }
 
+Playback::Playback(std::string driver, std::string sf_file)
+                   : synth(driver, sf_file), time_elapsed(0),
+                     playing(false)
+{}
+
+unsigned long Playback::getTime() const
+{
+    if (playing){
+        return std::chrono::duration_cast<std::chrono::milliseconds>
+            (std::chrono::steady_clock::now() - start_time).count();
+    } else {
+        return time_elapsed;
+    }
+}
+
+const Synth* Playback::getSynth() const
+{
+    return &synth;
+}
+
+void Playback::seek(unsigned long time)
+{
+    time_elapsed = time;
+}
+
+void Playback::pause()
+{
+    time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>
+                 (std::chrono::steady_clock::now() - start_time).count();
+    playing = false;
+}
+
+void Playback::play()
+{
+    std::chrono::milliseconds ms(time_elapsed);
+    start_time = std::chrono::steady_clock::now() - ms;
+    time_elapsed = 0;
+    playing = true;
+}
