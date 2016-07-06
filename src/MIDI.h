@@ -24,7 +24,7 @@
 
 class Playback;
 class NoteEditor;
-class MIDI;
+class MIDIData;
 
 class Event {
 public:
@@ -110,7 +110,7 @@ public:
     void play();
 
 private:
-    MIDI* instance;
+    MIDIData* instance;
     Synth synth;
     std::chrono::steady_clock::time_point start_time;
     //for storing the time when we pause
@@ -118,9 +118,9 @@ private:
     bool playing;
 };
 
-class MIDI {
+class MIDIData {
 public:
-    MIDI();
+    MIDIData();
 };
 
 #endif /* MIDI_H */

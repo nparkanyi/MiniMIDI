@@ -64,7 +64,6 @@
 		<Unit filename="src/license_text.h" />
 		<Unit filename="src/main.cc" />
 		<Unit filename="src/notes_pixmap.h" />
-		<Unit filename="version.h" />
 		<Extensions>
 			<AutoVersioning>
 				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
