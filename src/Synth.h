@@ -17,6 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <string>
+#include <exception>
 #include <fluidsynth.h>
 
  class Synth {
@@ -31,6 +32,30 @@
     std::string getSF();
     void noteOn(short value, int velocity);
     void noteOff(short value);
+
+    class FluidInitFail : public std::exception {
+    public:
+        virtual const char* what() const noexcept
+        {
+            return "Failed to initialize FluidSynth!";
+        }
+    };
+
+    class FluidDriverFail : public std::exception {
+    public:
+        virtual const char* what() const noexcept
+        {
+            return "Failed to load FluidSynth driver!";
+        }
+    };
+
+    class FluidSFFail : public std::exception {
+    public:
+        virtual const char* what() const noexcept
+        {
+            return "Failed to load soundfont!";
+        }
+    };
 
 private:
     bool is_initialized;

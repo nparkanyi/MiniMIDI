@@ -19,6 +19,7 @@
 #include <array>
 #include <Fl/Fl.H>
 #include <Fl/Fl_Box.H>
+#include "MIDI.h"
 
 
 class Keyboard {
@@ -48,7 +49,8 @@ public:
 
 private:
   Keyboard keyboard;
-
+  MIDIData data;
+  Playback play;
 };
 
 #endif /* VIEWPORT_H */

@@ -107,10 +107,10 @@ void Keyboard::draw() const
 }
 
 
-Viewport::Viewport(int x, int y, int w, int h) : Fl_Box(FL_EMBOSSED_FRAME,
-                                                        x, y, w, h, ""),
-                                                 keyboard(x, y + 3 * h / 4,
-                                                          w, h / 4)
+Viewport::Viewport(int x, int y, int w, int h)
+                   : Fl_Box(FL_EMBOSSED_FRAME, x, y, w, h, ""),
+                     keyboard(x, y + 3 * h / 4, w, h / 4),
+                     data(), play("dsound", "font.sf2")
 {
 }
 
