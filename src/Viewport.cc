@@ -18,6 +18,7 @@
 #include <cstdio>
 #include "Viewport.h"
 #include <Fl/fl_draw.H>
+#include <Fl/fl_ask.H>
 
 
 Keyboard::Keyboard(int x, int y, int w, int h) : x(x), y(y), w(w), h(h)
@@ -110,8 +111,13 @@ void Keyboard::draw() const
 Viewport::Viewport(int x, int y, int w, int h)
                    : Fl_Box(FL_EMBOSSED_FRAME, x, y, w, h, ""),
                      keyboard(x, y + 3 * h / 4, w, h / 4),
-                     data(), play("dsound", "font.sf2")
+                     data(), play()
 {
+    try {
+        play.getSynth()->load("dsound", "GeneralUser GS 1.44 SoftSynth\\GeneralUser GS SoftSynth v1.44.sf2");
+    } catch (std::exception &e){
+        fl_alert(e.what());
+    }
 }
 
 

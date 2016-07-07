@@ -14,18 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <Fl/Fl_ask.h>
 #include "Synth.h"
 
-Synth::Synth(std::string driver, std::string sf_file) : is_initialized(false), driver(driver), sf_file(sf_file),
-                                                        settings(nullptr), synth(nullptr), adriver(nullptr)
-{
-    try{
-        reload(driver, sf_file);
-    } catch (std::exception &e){
-        fl_alert(e.what());
-    }
-}
+Synth::Synth() : is_initialized(false), settings(nullptr), synth(nullptr), adriver(nullptr)
+{}
 
 Synth::~Synth()
 {
@@ -35,7 +27,7 @@ Synth::~Synth()
     delete_fluid_settings(settings);
 }
 
-void Synth::reload(std::string driver, std::string sf_file)
+void Synth::load(std::string driver, std::string sf_file)
 {
     settings = new_fluid_settings();
     synth = new_fluid_synth(settings);
@@ -60,7 +52,6 @@ void Synth::reload(std::string driver, std::string sf_file)
         adriver = nullptr; settings = nullptr; synth = nullptr;
         throw FluidSFFail();
     }
-    fluid_synth_noteon(synth, 0, 60, 100);
 
     is_initialized = true;
 }

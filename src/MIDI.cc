@@ -143,9 +143,7 @@ void Track::getColour(char &r, char &g, char &b) const
     b = this->b;
 }
 
-Playback::Playback(std::string driver, std::string sf_file)
-                   : synth(driver, sf_file), time_elapsed(0),
-                     playing(false)
+Playback::Playback() : time_elapsed(0), playing(false)
 {}
 
 unsigned long Playback::getTime() const
@@ -158,7 +156,7 @@ unsigned long Playback::getTime() const
     }
 }
 
-const Synth* Playback::getSynth() const
+Synth* Playback::getSynth()
 {
     return &synth;
 }

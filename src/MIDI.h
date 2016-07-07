@@ -102,11 +102,11 @@ private:
 class Playback {
 public:
     //driver and soundfont file for the synthesizer
-    Playback(std::string driver, std::string sf_file);
+    Playback();
 
     //current playback time
     unsigned long getTime() const;
-    const Synth* getSynth() const;
+    Synth* getSynth();
     void seek(unsigned long time);
     void pause();
     void play();

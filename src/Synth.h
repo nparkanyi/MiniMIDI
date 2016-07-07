@@ -22,12 +22,12 @@
 
  class Synth {
  public:
-    Synth(std::string driver, std::string sf_file);
+    Synth();
     ~Synth();
 
     //whether fluidsynth was successfully loaded, if it fails, playback will be silent
     bool initialized();
-    void reload(std::string driver, std::string sf_file);
+    void load(std::string driver, std::string sf_file);
     std::string getDriver();
     std::string getSF();
     void noteOn(short value, int velocity);
