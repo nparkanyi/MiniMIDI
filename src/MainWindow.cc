@@ -140,3 +140,4 @@ void MainWindow::cbQuit(Fl_Widget* w, void* v)
 {
   static_cast<MainWindow*>(v)->quit();
 }
+

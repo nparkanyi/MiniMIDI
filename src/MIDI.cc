@@ -66,7 +66,11 @@ Track::Track() : r(255), g(255), b(255)
 unsigned long Track::getDuration() const
 {
     int n = events.size();
-    return events[n - 1]->getTime();
+    if (n == 0){
+        return 0;
+    } else {
+        return events[n - 1]->getTime();
+    }
 }
 
 void Track::addEvent(std::shared_ptr<Event> ev)
@@ -83,6 +87,16 @@ void Track::removeEvent(std::shared_ptr<Event> ev)
             break;
         }
     }
+}
+
+int Track::numEvents() const
+{
+    return events.size();
+}
+
+std::shared_ptr<Event> Track::getEvent(int index) const
+{
+    return events[index];
 }
 
 std::vector<std::shared_ptr<Event>> Track::getEventsAt(unsigned long time) const
@@ -167,4 +181,23 @@ void Playback::play()
     start_time = std::chrono::steady_clock::now() - ms;
     time_elapsed = 0;
     playing = true;
+}
+
+MIDIData::MIDIData() : filename("")
+{}
+
+int MIDIData::getNumTracks() const
+{
+    return tracks.size();
+}
+
+Track* MIDIData::getTrack(int index)
+{
+    return &tracks[index];
+}
+
+void MIDIData::newTrack()
+{
+    Track blank;
+    tracks.push_back(blank);
 }

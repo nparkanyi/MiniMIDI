@@ -86,6 +86,8 @@ public:
     unsigned long getDuration() const;
     void addEvent(std::shared_ptr<Event> ev);
     void removeEvent(std::shared_ptr<Event> ev);
+    int numEvents() const;
+    std::shared_ptr<Event> getEvent(int index) const;
     //returns vector of events occurring at this time
     std::vector<std::shared_ptr<Event>> getEventsAt(unsigned long time) const;
     //this track's NoteOns will be drawn in this colour on the NoteOnEditor
@@ -121,6 +123,14 @@ private:
 class MIDIData {
 public:
     MIDIData();
+
+    int getNumTracks() const;
+    Track* getTrack(int index);
+    void newTrack();
+
+private:
+    std::vector<Track> tracks;
+    std::string filename;
 };
 
 #endif /* MIDI_H */
