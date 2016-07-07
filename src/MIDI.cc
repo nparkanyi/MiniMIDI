@@ -34,7 +34,7 @@ int NoteOn::getDuration() const
 
 void NoteOn::run()
 {
-    //(play->getSynth())->noteOn(value, velocity);
+    (play->getSynth())->noteOn(value, velocity);
 }
 
 void NoteOn::draw()
@@ -54,7 +54,7 @@ short NoteOff::getValue() const
 
 void NoteOff::run()
 {
-    //(play->getSynth())->noteOff(value);
+    (play->getSynth())->noteOff(value);
 }
 
 void NoteOff::draw()
@@ -143,7 +143,7 @@ void Track::getColour(char &r, char &g, char &b) const
     b = this->b;
 }
 
-Playback::Playback() : time_elapsed(0), playing(false)
+Playback::Playback(MIDIData* data) : data(data), time_elapsed(0), playing(false)
 {}
 
 unsigned long Playback::getTime() const
@@ -178,13 +178,45 @@ void Playback::play()
     std::chrono::milliseconds ms(time_elapsed);
     start_time = std::chrono::steady_clock::now() - ms;
     time_elapsed = 0;
+    for (int i = 0; i < data->numTracks(); i++){
+        track_indices.push_back(0);
+    }
     playing = true;
+}
+
+void Playback::everyFrame()
+{
+    int num_events;
+    int num_tracks = data->numTracks();
+    Track* track;
+    if (playing){
+        for (int i = 0; i < num_tracks; i++){
+            track = data->getTrack(i);
+            num_events = track->numEvents();
+            while (track_indices[i] < num_events &&
+                   track->getEvent(track_indices[i])->getTime() <= getTime()){
+                track->getEvent(track_indices[i])->run();
+                track_indices[i]++;
+            }
+        }
+    }
 }
 
 MIDIData::MIDIData() : filename("")
 {}
 
-int MIDIData::getNumTracks() const
+void MIDIData::fillTrack(Playback* play)
+{
+    newTrack();
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(play, nullptr, 0, 60, 100, 500)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(play, nullptr, 500, 60)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(play, nullptr, 501, 59, 100, 1500)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(play, nullptr, 2001, 59)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(play, nullptr, 2500, 57, 100, 3000)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(play, nullptr, 5500, 57)));
+}
+
+int MIDIData::numTracks() const
 {
     return tracks.size();
 }
@@ -196,6 +228,5 @@ Track* MIDIData::getTrack(int index)
 
 void MIDIData::newTrack()
 {
-    Track blank;
-    tracks.push_back(blank);
+    tracks.push_back(Track());
 }

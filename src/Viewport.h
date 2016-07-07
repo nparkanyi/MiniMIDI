@@ -43,9 +43,13 @@ class Viewport : public Fl_Box {
 public:
   Viewport(int x, int y, int w, int h);
 
+  Playback* getPlayback();
+  MIDIData* getMIDIData();
   virtual void draw();
   virtual void resize(int x, int y, int w, int h);
   virtual int handle(int event);
+
+  static void cbEveryFrame(void* v);
 
 private:
   Keyboard keyboard;

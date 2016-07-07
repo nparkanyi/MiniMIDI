@@ -51,10 +51,12 @@ void PlaybackControls::cbPlay(Fl_Widget* w, void* v)
 {
   static bool playing = false;
   Fl_Button* play = static_cast<Fl_Button*>(w);
+  Viewport* view = static_cast<Viewport*>(v);
 
   if (!playing){
     playing = true;
     play->label("@||");
+    view->getPlayback()->play();
   } else {
     playing = false;
     play->label("@>");

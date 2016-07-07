@@ -90,6 +90,7 @@ public:
     std::shared_ptr<Event> getEvent(int index) const;
     //returns vector of events occurring at this time
     std::vector<std::shared_ptr<Event>> getEventsAt(unsigned long time) const;
+
     //this track's NoteOns will be drawn in this colour on the NoteOnEditor
     void setColour(char r, char g, char b);
     void getColour(char &r, char &g, char &b) const;
@@ -97,12 +98,13 @@ public:
 private:
     std::vector<std::shared_ptr<Event>> events;
     char r, g, b;
+    int index;
 };
 
 class Playback {
 public:
     //driver and soundfont file for the synthesizer
-    Playback();
+    Playback(MIDIData* data);
 
     //current playback time
     unsigned long getTime() const;
@@ -110,23 +112,27 @@ public:
     void seek(unsigned long time);
     void pause();
     void play();
+    //method called every frame, this actually plays notes
+    void everyFrame();
 
 private:
-    MIDIData* instance;
+    MIDIData* data;
     Synth synth;
     std::chrono::steady_clock::time_point start_time;
     //for storing the time when we pause
     unsigned long time_elapsed;
     bool playing;
+    std::vector<int> track_indices;
 };
 
 class MIDIData {
 public:
     MIDIData();
 
-    int getNumTracks() const;
+    int numTracks() const;
     Track* getTrack(int index);
     void newTrack();
+    void fillTrack(Playback* play);
 
 private:
     std::vector<Track> tracks;

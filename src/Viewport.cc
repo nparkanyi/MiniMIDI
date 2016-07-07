@@ -16,17 +16,15 @@
  */
 #include <cmath>
 #include <cstdio>
-#include "Viewport.h"
 #include <Fl/fl_draw.H>
 #include <Fl/fl_ask.H>
-
+#include "Viewport.h"
 
 Keyboard::Keyboard(int x, int y, int w, int h) : x(x), y(y), w(w), h(h)
 {
   key_width = w / 52; //key_width is the width of a white key
   n = std::ceil(2.0f / (static_cast<float>(w) / 52.0f - key_width));
 }
-
 
 void Keyboard::draw(std::array<bool, 88> &key_states) const
 {
@@ -83,13 +81,11 @@ void Keyboard::draw(std::array<bool, 88> &key_states) const
   }
 }
 
-
 void Keyboard::move(int x, int y)
 {
   this->x = x;
   this->y = y;
 }
-
 
 void Keyboard::resize(int w, int h)
 {
@@ -99,7 +95,6 @@ void Keyboard::resize(int w, int h)
   n = std::ceil(2.0f / (static_cast<float>(w) / 52.0f - key_width));
 }
 
-
 void Keyboard::draw() const
 {
   std::array<bool, 88> keys;
@@ -107,19 +102,29 @@ void Keyboard::draw() const
   draw(keys);
 }
 
-
 Viewport::Viewport(int x, int y, int w, int h)
                    : Fl_Box(FL_EMBOSSED_FRAME, x, y, w, h, ""),
                      keyboard(x, y + 3 * h / 4, w, h / 4),
-                     data(), play()
+                     data(), play(&data)
 {
     try {
         play.getSynth()->load("dsound", "GeneralUser GS 1.44 SoftSynth\\GeneralUser GS SoftSynth v1.44.sf2");
     } catch (std::exception &e){
         fl_alert(e.what());
     }
+    data.fillTrack(&play);
+    Fl::add_timeout(0.001, Viewport::cbEveryFrame, this);
 }
 
+Playback* Viewport::getPlayback()
+{
+    return &play;
+}
+
+MIDIData* Viewport::getMIDIData()
+{
+    return &data;
+}
 
 void Viewport::draw()
 {
@@ -129,7 +134,6 @@ void Viewport::draw()
   Fl_Box::draw();
 }
 
-
 void Viewport::resize(int x, int y, int w, int h)
 {
   keyboard.move(x, y + 3 * h / 4);
@@ -138,8 +142,14 @@ void Viewport::resize(int x, int y, int w, int h)
   Fl_Box::resize(x, y, w, h);
 }
 
-
 int Viewport::handle(int event)
 {
   return Fl_Box::handle(event);
+}
+
+void Viewport::cbEveryFrame(void* v)
+{
+    Viewport* view = static_cast<Viewport*>(v);
+    view->getPlayback()->everyFrame();
+    Fl::repeat_timeout(0.001, Viewport::cbEveryFrame, v);
 }
