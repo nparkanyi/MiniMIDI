@@ -28,15 +28,15 @@
 PlaybackControls::PlaybackControls(int x, int y, Viewport* view) :
                                     Fl_Group(x, y, 140, 40), view(view)
 {
-  resizable(NULL);
-  Fl_Button* rwd = new Fl_Button(x, y, 40, 40, "@<<");
-  rwd->callback(cbRwd, view);
+    resizable(NULL);
+    Fl_Button* rwd = new Fl_Button(x, y, 40, 40, "@<<");
+    rwd->callback(cbRwd, view);
 
-  Fl_Button* play = new Fl_Button(x + 50, y, 40, 40, "@>");
-  play->callback(cbPlay, view);
+    Fl_Button* play = new Fl_Button(x + 50, y, 40, 40, "@>");
+    play->callback(cbPlay, view);
 
-  Fl_Button* fwd = new Fl_Button(x + 100, y, 40, 40, "@>>");
-  fwd->callback(cbRwd, view);
+    Fl_Button* fwd = new Fl_Button(x + 100, y, 40, 40, "@>>");
+    fwd->callback(cbRwd, view);
 }
 
 void PlaybackControls::resize(int x, int y, int w, int h)
@@ -49,18 +49,18 @@ void PlaybackControls::resize(int x, int y, int w, int h)
 
 void PlaybackControls::cbPlay(Fl_Widget* w, void* v)
 {
-  static bool playing = false;
-  Fl_Button* play = static_cast<Fl_Button*>(w);
-  Viewport* view = static_cast<Viewport*>(v);
+    static bool playing = false;
+    Fl_Button* play = static_cast<Fl_Button*>(w);
+    Viewport* view = static_cast<Viewport*>(v);
 
-  if (!playing){
-    playing = true;
-    play->label("@||");
-    view->getPlayback()->play();
-  } else {
-    playing = false;
-    play->label("@>");
-  }
+    if (!playing){
+        playing = true;
+        play->label("@||");
+        view->getPlayback()->play();
+    } else {
+        playing = false;
+        play->label("@>");
+    }
 }
 
 
@@ -76,23 +76,23 @@ void PlaybackControls::cbFwd(Fl_Widget* w, void* v)
 
 MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
 {
-  label("MiniMIDI");
-  size_range(920, 600);
+    label("MiniMIDI");
+    size_range(920, 600);
 
-  Fl_Pixmap px(notes_pixmap);
-  Fl_RGB_Image icon_image(&px);
-  icon(&icon_image);
+    Fl_Pixmap px(notes_pixmap);
+    Fl_RGB_Image icon_image(&px);
+    icon(&icon_image);
 
-  view = new Viewport(10, 40, RES_X - 20, RES_Y - 100);
-  resizable(view);
+    view = new Viewport(10, 40, RES_X - 20, RES_Y - 100);
+    resizable(view);
 
-  about_dialog = new AboutDialog();
-  begin();
+    about_dialog = new AboutDialog();
+    begin();
 
-  settings_dialog = new SettingsDialog();
-  begin();
+    settings_dialog = new SettingsDialog();
+    begin();
 
-  Fl_Menu_Item items[] = { { "&File", 0, 0, 0, FL_SUBMENU},
+    Fl_Menu_Item items[] = { { "&File", 0, 0, 0, FL_SUBMENU},
                            { "&Quit", FL_COMMAND + 'q', cbQuit, this},
                            { 0 },
                            { "&Edit", 0, 0, 0, FL_SUBMENU},
@@ -103,43 +103,43 @@ MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
                            { "&About", 0, cbAbout, this},
                            { 0 },
                            { 0 } };
-  menu = new Fl_Menu_Bar(0, 0, RES_X, 30);
-  menu->copy(items);
+    menu = new Fl_Menu_Bar(0, 0, RES_X, 30);
+    menu->copy(items);
 
-  controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50, view);
-  controls->end();
+    controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50, view);
+    controls->end();
 }
 
 void MainWindow::quit()
 {
-  about_dialog->hide();
-  settings_dialog->hide();
-  hide();
+    about_dialog->hide();
+    settings_dialog->hide();
+    hide();
 }
 
 
 void MainWindow::resize(int x, int y, int w, int h)
 {
-  Fl_Window::resize(x, y, w, h);
-  //keep the playback controls centred
-  controls->position(w / 2 - 70, controls->y());
+    Fl_Window::resize(x, y, w, h);
+    //keep the playback controls centred
+    controls->position(w / 2 - 70, controls->y());
 }
 
 
 void MainWindow::cbAbout(Fl_Widget* w, void* v)
 {
-  static_cast<MainWindow*>(v)->about_dialog->show();
+    static_cast<MainWindow*>(v)->about_dialog->show();
 }
 
 
 void MainWindow::cbSettings(Fl_Widget* w, void* v)
 {
-  static_cast<MainWindow*>(v)->settings_dialog->show();
+    static_cast<MainWindow*>(v)->settings_dialog->show();
 }
 
 
 void MainWindow::cbQuit(Fl_Widget* w, void* v)
 {
-  static_cast<MainWindow*>(v)->quit();
+    static_cast<MainWindow*>(v)->quit();
 }
 

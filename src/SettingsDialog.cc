@@ -26,142 +26,142 @@
 
 SettingsDialog::SettingsDialog() : Fl_Window(RESX, RESY)
 {
-  label("Settings");
+    label("Settings");
 
-  Fl_Menu_Item schemes[] = {{ "Gtk+", 0, 0, 0},
+    Fl_Menu_Item schemes[] = {{ "Gtk+", 0, 0, 0},
                          { "Plastic", 0, 0, 0},
                          { "Gleam", 0, 0, 0},
                          { "Standard", 0, 0, 0},
                          { 0 }};
-  Fl_Choice* scheme_choice = new Fl_Choice(150, 10, 100, 30, "Widget Scheme:");
-  scheme_choice->copy(schemes);
-  scheme_choice->callback(cbChangeScheme);
-  scheme_choice->value(schemeIndex());
+    Fl_Choice* scheme_choice = new Fl_Choice(150, 10, 100, 30, "Widget Scheme:");
+    scheme_choice->copy(schemes);
+    scheme_choice->callback(cbChangeScheme);
+    scheme_choice->value(schemeIndex());
 
-  Fl_Menu_Item colours[] = {{ "Light", 0, 0, 0},
+    Fl_Menu_Item colours[] = {{ "Light", 0, 0, 0},
                          { "Medium", 0, 0, 0},
                          { "Dark", 0, 0, 0},
                          { "UNIX Wizard", 0, 0, 0},
                          { 0 }};
-  Fl_Choice* colour_choice = new Fl_Choice(410, 10, 100, 30, "Colour Scheme:");
-  colour_choice->copy(colours);
-  colour_choice->callback(cbChangeColour);
-  colour_choice->value(colourIndex());
+    Fl_Choice* colour_choice = new Fl_Choice(410, 10, 100, 30, "Colour Scheme:");
+    colour_choice->copy(colours);
+    colour_choice->callback(cbChangeColour);
+    colour_choice->value(colourIndex());
 
-  Fl_Return_Button* btn = new Fl_Return_Button(RESX - 60, RESY - 40, 50, 30);
-  btn->callback(cbClose, this);
-  btn->label("OK");
+    Fl_Return_Button* btn = new Fl_Return_Button(RESX - 60, RESY - 40, 50, 30);
+    btn->callback(cbClose, this);
+    btn->label("OK");
 }
 
 void SettingsDialog::cbChangeScheme(Fl_Widget* w, void *v)
 {
-  int choice = static_cast<Fl_Choice*>(w)->value();
+    int choice = static_cast<Fl_Choice*>(w)->value();
 
-  switch(choice){
-    case 0:
-      Fl::scheme("gtk+");
-      break;
-    case 1:
-      Fl::scheme("plastic");
-      break;
-    case 2:
-      Fl::scheme("gleam");
-      break;
-    case 3:
-      Fl::scheme("standard");
-      break;
-  }
-  Fl::redraw();
+    switch(choice){
+        case 0:
+            Fl::scheme("gtk+");
+            break;
+        case 1:
+            Fl::scheme("plastic");
+            break;
+        case 2:
+            Fl::scheme("gleam");
+            break;
+        case 3:
+            Fl::scheme("standard");
+            break;
+    }
+    Fl::redraw();
 }
 
 void SettingsDialog::cbChangeColour(Fl_Widget* w, void* v)
 {
-  int choice = static_cast<Fl_Choice*>(w)->value();
+    int choice = static_cast<Fl_Choice*>(w)->value();
 
-  switch(choice){
-    case 0: //Light
-      Fl::background(242, 241, 240);
-      Fl::background2(255, 255, 255);
-      Fl::foreground(60, 60, 60);
-      break;
-    case 1: //Medium
-      Fl::background(192, 192, 192);
-      Fl::background2(255, 255, 255);
-      Fl::foreground(0, 0, 0);
-      break;
-    case 2: //Dark
-      Fl::background(74, 72, 66);
-      Fl::background2(90, 90, 90);
-      Fl::foreground(223, 219, 210);
-      break;
-    case 3: //UNIX Wizard
-      Fl::background(0, 0, 0);
-      Fl::background2(30, 30, 30);
-      Fl::foreground(0, 255, 0);
-      break;
-  }
-  Fl::redraw();
+    switch(choice){
+        case 0: //Light
+            Fl::background(242, 241, 240);
+            Fl::background2(255, 255, 255);
+            Fl::foreground(60, 60, 60);
+            break;
+        case 1: //Medium
+            Fl::background(192, 192, 192);
+            Fl::background2(255, 255, 255);
+            Fl::foreground(0, 0, 0);
+            break;
+        case 2: //Dark
+            Fl::background(74, 72, 66);
+            Fl::background2(90, 90, 90);
+            Fl::foreground(223, 219, 210);
+            break;
+        case 3: //UNIX Wizard
+            Fl::background(0, 0, 0);
+            Fl::background2(30, 30, 30);
+            Fl::foreground(0, 255, 0);
+            break;
+    }
+    Fl::redraw();
 }
 
 void SettingsDialog::cbClose(Fl_Widget* w, void* v)
 {
-  Fl_Preferences* prefs = new Fl_Preferences(Fl_Preferences::USER, "MiniMIDI", "MiniMIDI");
-  prefs->set("scheme", Fl::scheme());
+    Fl_Preferences* prefs = new Fl_Preferences(Fl_Preferences::USER, "MiniMIDI", "MiniMIDI");
+    prefs->set("scheme", Fl::scheme());
 
-  unsigned char r, g, b;
-  Fl::get_color(FL_BACKGROUND_COLOR, r, g, b);
-  prefs->set("bg_r", r);
-  prefs->set("bg_g", g);
-  prefs->set("bg_b", b);
-  Fl::get_color(FL_BACKGROUND2_COLOR, r, g, b);
-  prefs->set("bg2_r", r);
-  prefs->set("bg2_g", g);
-  prefs->set("bg2_b", b);
-  Fl::get_color(FL_FOREGROUND_COLOR, r, g, b);
-  prefs->set("fg_r", r);
-  prefs->set("fg_g", g);
-  prefs->set("fg_b", b);
+    unsigned char r, g, b;
+    Fl::get_color(FL_BACKGROUND_COLOR, r, g, b);
+    prefs->set("bg_r", r);
+    prefs->set("bg_g", g);
+    prefs->set("bg_b", b);
+    Fl::get_color(FL_BACKGROUND2_COLOR, r, g, b);
+    prefs->set("bg2_r", r);
+    prefs->set("bg2_g", g);
+    prefs->set("bg2_b", b);
+    Fl::get_color(FL_FOREGROUND_COLOR, r, g, b);
+    prefs->set("fg_r", r);
+    prefs->set("fg_g", g);
+    prefs->set("fg_b", b);
 
-  prefs->flush();
+    prefs->flush();
 
-  static_cast<SettingsDialog*>(v)->hide();
+    static_cast<SettingsDialog*>(v)->hide();
 }
 
 int SettingsDialog::schemeIndex()
 {
-  const char* scheme = Fl::scheme();
+    const char* scheme = Fl::scheme();
 
-  if (std::strcmp("gtk+", scheme) == 0){
-    return 0;
-  } else if (std::strcmp("plastic", scheme) == 0){
-    return 1;
-  } else if (std::strcmp("gleam", scheme) == 0){
-    return 2;
-  } else if (std::strcmp("standard", scheme) == 0){
-    return 3;
-  } else {
-    return 0;
-  }
+    if (std::strcmp("gtk+", scheme) == 0){
+        return 0;
+    } else if (std::strcmp("plastic", scheme) == 0){
+        return 1;
+    } else if (std::strcmp("gleam", scheme) == 0){
+        return 2;
+    } else if (std::strcmp("standard", scheme) == 0){
+        return 3;
+    } else {
+        return 0;
+    }
 }
 
 int SettingsDialog::colourIndex()
 {
-  unsigned char r, g, b;
+    unsigned char r, g, b;
 
-  Fl::get_color(FL_BACKGROUND_COLOR, r, g, b);
+    Fl::get_color(FL_BACKGROUND_COLOR, r, g, b);
 
-  switch(r){ //identify colour scheme from r value
-    case 242: //Light
-      return 0;
-      break;
-    case 192: //Medium
-      return 1;
-      break;
-    case 74: //Dark
-      return 2;
-      break;
-    default: //UNIX Wizard
-      return 3;
-      break;
-  }
+    switch(r){ //identify colour scheme from r value
+        case 242: //Light
+            return 0;
+            break;
+        case 192: //Medium
+            return 1;
+            break;
+        case 74: //Dark
+            return 2;
+            break;
+        default: //UNIX Wizard
+            return 3;
+            break;
+    }
 }
