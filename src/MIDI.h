@@ -88,8 +88,8 @@ public:
     void removeEvent(std::shared_ptr<Event> ev);
     int numEvents() const;
     std::shared_ptr<Event> getEvent(int index) const;
-    //returns vector of events occurring at this time
-    std::vector<std::shared_ptr<Event>> getEventsAt(unsigned long time) const;
+    //returns index of first event occurring at this time
+    int getEventAt(unsigned long time) const;
 
     //this track's NoteOns will be drawn in this colour on the NoteOnEditor
     void setColour(char r, char g, char b);
@@ -112,6 +112,8 @@ public:
     void seek(unsigned long time);
     void pause();
     void play();
+    //adds new indices if necessary (i.e. if we added a track), leaves existing indices unmodified
+    void updateIndices();
     //method called every frame, this actually plays notes
     void everyFrame();
 

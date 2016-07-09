@@ -75,3 +75,10 @@ void Synth::noteOff(short value)
 {
     fluid_synth_noteoff(synth, 0, value);
 }
+
+void Synth::clear()
+{
+    for (int i = 0; i <= 127; i++){
+        fluid_synth_noteoff(synth, 0, i);
+    }
+}

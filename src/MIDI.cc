@@ -104,9 +104,8 @@ std::shared_ptr<Event> Track::getEvent(int index) const
     return events[index];
 }
 
-std::vector<std::shared_ptr<Event>> Track::getEventsAt(unsigned long time) const
+int Track::getEventAt(unsigned long time) const
 {
-    std::vector<std::shared_ptr<Event>> found;
     int size = events.size();
     int i = size / 2;
     int jump = i / 2;
@@ -124,14 +123,7 @@ std::vector<std::shared_ptr<Event>> Track::getEventsAt(unsigned long time) const
         }
     }
 
-    //from there, add events that occur at time, if any
-    for ( ; i < size; i++){
-        if (events[i]->getTime() > time){
-            break;
-        }
-        found.push_back(events[i]);
-    }
-    return found;
+    return i;
 }
 
 void Track::setColour(char r, char g, char b)
@@ -168,7 +160,22 @@ Synth* Playback::getSynth()
 
 void Playback::seek(unsigned long time)
 {
+    MIDIData* data = view->getMIDIData();
+    Track* track;
+    int num_tracks = data->numTracks();
+
     time_elapsed = time;
+    updateIndices();
+    for (int i = 0; i < num_tracks; i++){
+        track = data->getTrack(i);
+        track_indices[i] = track->getEventAt(time);
+    }
+    view->getKeyboard()->clear();
+    view->redraw();
+    synth.clear();
+
+    if (playing)
+        play();
 }
 
 void Playback::pause()
@@ -185,9 +192,17 @@ void Playback::play()
     start_time = std::chrono::steady_clock::now() - ms;
     time_elapsed = 0;
     for (int i = 0; i < data->numTracks(); i++){
-        track_indices.push_back(0);
+        updateIndices();
     }
     playing = true;
+}
+
+void Playback::updateIndices()
+{
+    int new_tracks = view->getMIDIData()->numTracks() - track_indices.size();
+    for (int i = 0; i < new_tracks; i++){
+        track_indices.push_back(0);
+    }
 }
 
 void Playback::everyFrame()

@@ -35,6 +35,11 @@ void Keyboard::setKey(short key, bool value)
     }
 }
 
+void Keyboard::clear()
+{
+    key_states.fill(false);
+}
+
 void Keyboard::draw() const
 {
     int key_width = this->key_width;

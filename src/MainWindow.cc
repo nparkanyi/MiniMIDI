@@ -60,12 +60,15 @@ void PlaybackControls::cbPlay(Fl_Widget* w, void* v)
     } else {
         playing = false;
         play->label("@>");
+        view->getPlayback()->pause();
     }
 }
 
 
 void PlaybackControls::cbRwd(Fl_Widget* w, void* v)
 {
+    Viewport* view = static_cast<Viewport*>(v);
+    view->getPlayback()->seek(0);
 }
 
 

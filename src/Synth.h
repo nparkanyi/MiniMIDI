@@ -32,6 +32,7 @@
     std::string getSF();
     void noteOn(short value, int velocity);
     void noteOff(short value);
+    void clear();
 
     class FluidInitFail : public std::exception {
     public:
