@@ -24,9 +24,18 @@ Keyboard::Keyboard(int x, int y, int w, int h) : x(x), y(y), w(w), h(h)
 {
   key_width = w / 52; //key_width is the width of a white key
   n = std::ceil(2.0f / (static_cast<float>(w) / 52.0f - key_width));
+  key_states.fill(false);
 }
 
-void Keyboard::draw(std::array<bool, 88> &key_states) const
+void Keyboard::setKey(short key, bool value)
+{
+    //keyboard contains midi values 21 through 108
+    if (key >= 21 && key <= 108){
+        key_states[key - 21] = value;
+    }
+}
+
+void Keyboard::draw() const
 {
   int key_width = this->key_width;
   int offset = 0; //only increments after each white note, black keys drawn
@@ -95,25 +104,23 @@ void Keyboard::resize(int w, int h)
   n = std::ceil(2.0f / (static_cast<float>(w) / 52.0f - key_width));
 }
 
-void Keyboard::draw() const
-{
-  std::array<bool, 88> keys;
-  keys.fill(false);
-  draw(keys);
-}
-
 Viewport::Viewport(int x, int y, int w, int h)
                    : Fl_Box(FL_EMBOSSED_FRAME, x, y, w, h, ""),
                      keyboard(x, y + 3 * h / 4, w, h / 4),
-                     data(), play(&data)
+                     data(this), play(this)
 {
     try {
         play.getSynth()->load("dsound", "GeneralUser GS 1.44 SoftSynth\\GeneralUser GS SoftSynth v1.44.sf2");
     } catch (std::exception &e){
         fl_alert(e.what());
     }
-    data.fillTrack(&play);
+    data.fillTrack();
     Fl::add_timeout(0.001, Viewport::cbEveryFrame, this);
+}
+
+Keyboard* Viewport::getKeyboard()
+{
+    return &keyboard;
 }
 
 Playback* Viewport::getPlayback()

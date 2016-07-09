@@ -26,12 +26,13 @@ class Keyboard {
 public:
   Keyboard(int x, int y, int w, int h);
 
-  void draw(std::array<bool, 88> &key_states) const;
+  void setKey(short key, bool value);
   void draw() const;
   void move(int x, int y);
   void resize(int w, int h);
 
 private:
+  std::array<bool, 88> key_states;
   int x, y, w, h;
   int key_width;
   int n; //due to truncation of key_width, there is a gap at the right of keyboard,
@@ -43,6 +44,7 @@ class Viewport : public Fl_Box {
 public:
   Viewport(int x, int y, int w, int h);
 
+  Keyboard* getKeyboard();
   Playback* getPlayback();
   MIDIData* getMIDIData();
   virtual void draw();

@@ -15,10 +15,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "MIDI.h"
+#include "Viewport.h"
 
-NoteOn::NoteOn(Playback* play, NoteEditor* editor, unsigned long time, short value,
+NoteOn::NoteOn(Viewport* view, unsigned long time, short value,
            short velocity, int duration)
-           : Event(play, editor, "NoteOn", time), value(value), velocity(velocity),
+           : Event(view, "NoteOn", time), value(value), velocity(velocity),
              duration(duration)
 {}
 
@@ -34,7 +35,9 @@ int NoteOn::getDuration() const
 
 void NoteOn::run()
 {
-    (play->getSynth())->noteOn(value, velocity);
+    view->getPlayback()->getSynth()->noteOn(value, velocity);
+    view->getKeyboard()->setKey(value, true);
+    view->redraw();
 }
 
 void NoteOn::draw()
@@ -42,8 +45,8 @@ void NoteOn::draw()
 
 }
 
-NoteOff::NoteOff(Playback* play, NoteEditor* editor, unsigned long time, short value)
-                 : Event(play, editor, "NoteOff", time), value(value)
+NoteOff::NoteOff(Viewport* view, unsigned long time, short value)
+                 : Event(view, "NoteOff", time), value(value)
 {
 }
 
@@ -54,7 +57,9 @@ short NoteOff::getValue() const
 
 void NoteOff::run()
 {
-    (play->getSynth())->noteOff(value);
+    view->getPlayback()->getSynth()->noteOff(value);
+    view->getKeyboard()->setKey(value, false);
+    view->redraw();
 }
 
 void NoteOff::draw()
@@ -143,7 +148,7 @@ void Track::getColour(char &r, char &g, char &b) const
     b = this->b;
 }
 
-Playback::Playback(MIDIData* data) : data(data), time_elapsed(0), playing(false)
+Playback::Playback(Viewport* view) : view(view), time_elapsed(0), playing(false)
 {}
 
 unsigned long Playback::getTime() const
@@ -175,6 +180,7 @@ void Playback::pause()
 
 void Playback::play()
 {
+    MIDIData* data = view->getMIDIData();
     std::chrono::milliseconds ms(time_elapsed);
     start_time = std::chrono::steady_clock::now() - ms;
     time_elapsed = 0;
@@ -186,6 +192,7 @@ void Playback::play()
 
 void Playback::everyFrame()
 {
+    MIDIData* data = view->getMIDIData();
     int num_events;
     int num_tracks = data->numTracks();
     Track* track;
@@ -202,18 +209,18 @@ void Playback::everyFrame()
     }
 }
 
-MIDIData::MIDIData() : filename("")
+MIDIData::MIDIData(Viewport* view) : view(view), filename("")
 {}
 
-void MIDIData::fillTrack(Playback* play)
+void MIDIData::fillTrack()
 {
     newTrack();
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(play, nullptr, 0, 60, 100, 500)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(play, nullptr, 500, 60)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(play, nullptr, 501, 59, 100, 1500)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(play, nullptr, 2001, 59)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(play, nullptr, 2500, 57, 100, 3000)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(play, nullptr, 5500, 57)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 0, 60, 100, 500)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 500, 60)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 501, 59, 100, 1500)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 2001, 59)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 2500, 57, 100, 3000)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 5500, 57)));
 }
 
 int MIDIData::numTracks() const

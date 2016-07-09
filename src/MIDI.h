@@ -22,14 +22,15 @@
 #include <chrono>
 #include "Synth.h"
 
+class Viewport;
 class Playback;
 class NoteEditor;
 class MIDIData;
 
 class Event {
 public:
-    Event(Playback* play, NoteEditor* editor, std::string type, unsigned long time)
-          : play(play), editor(editor), type(type), time(time) {}
+    Event(Viewport* view, std::string type, unsigned long time)
+          : view(view), type(type), time(time) {}
     virtual ~Event(){}
 
     std::string getType() const { return type; }
@@ -40,8 +41,7 @@ public:
     virtual void draw() = 0;
 
 protected:
-    Playback* play;
-    NoteEditor* editor;
+    Viewport* view;
 
 private:
     std::string type;
@@ -51,7 +51,7 @@ private:
 
 class NoteOn : public Event {
 public:
-    NoteOn(Playback* play, NoteEditor* editor, unsigned long time, short value,
+    NoteOn(Viewport* view, unsigned long time, short value,
          short velocity, int duration);
 
     short getValue() const;
@@ -68,7 +68,7 @@ private:
 
 class NoteOff : public Event {
 public:
-    NoteOff(Playback* play, NoteEditor* editor, unsigned long time, short value);
+    NoteOff(Viewport* view, unsigned long time, short value);
 
     short getValue() const;
     virtual void run();
@@ -96,6 +96,7 @@ public:
     void getColour(char &r, char &g, char &b) const;
 
 private:
+    Viewport* view;
     std::vector<std::shared_ptr<Event>> events;
     char r, g, b;
     int index;
@@ -103,8 +104,7 @@ private:
 
 class Playback {
 public:
-    //driver and soundfont file for the synthesizer
-    Playback(MIDIData* data);
+    Playback(Viewport* view);
 
     //current playback time
     unsigned long getTime() const;
@@ -116,7 +116,7 @@ public:
     void everyFrame();
 
 private:
-    MIDIData* data;
+    Viewport* view;
     Synth synth;
     std::chrono::steady_clock::time_point start_time;
     //for storing the time when we pause
@@ -127,14 +127,15 @@ private:
 
 class MIDIData {
 public:
-    MIDIData();
+    MIDIData(Viewport* view);
 
     int numTracks() const;
     Track* getTrack(int index);
     void newTrack();
-    void fillTrack(Playback* play);
+    void fillTrack();
 
 private:
+    Viewport* view;
     std::vector<Track> tracks;
     std::string filename;
 };
