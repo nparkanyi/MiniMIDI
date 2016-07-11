@@ -54,6 +54,8 @@
 		<Unit filename="src/MIDI.h" />
 		<Unit filename="src/MainWindow.cc" />
 		<Unit filename="src/MainWindow.h" />
+		<Unit filename="src/NoteEditor.cc" />
+		<Unit filename="src/NoteEditor.h" />
 		<Unit filename="src/SettingsDialog.cc" />
 		<Unit filename="src/SettingsDialog.h" />
 		<Unit filename="src/Synth.cc" />

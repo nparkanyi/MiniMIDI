@@ -111,7 +111,7 @@ void Keyboard::resize(int w, int h)
 
 Viewport::Viewport(int x, int y, int w, int h)
                    : Fl_Box(FL_EMBOSSED_FRAME, x, y, w, h, ""),
-                     keyboard(x, y + 3 * h / 4, w, h / 4, this),
+                     keyboard(x, y + 3 * h / 4, w, h / 4, this), editor(x, y, w, 3 * h / 4, this),
                      data(this), play(this)
 {
     try {
@@ -140,14 +140,15 @@ MIDIData* Viewport::getMIDIData()
 
 void Viewport::draw()
 {
-    fl_rectf(x(), y(), w(), h(), 0, 0, 0);
-
+    editor.draw();
     keyboard.draw();
     Fl_Box::draw();
 }
 
 void Viewport::resize(int x, int y, int w, int h)
 {
+    editor.move(x, y);
+    editor.resize(w, 3 * h / 4);
     keyboard.move(x, y + 3 * h / 4);
     keyboard.resize(w, h / 4);
 

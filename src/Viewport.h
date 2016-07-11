@@ -20,6 +20,7 @@
 #include <Fl/Fl.H>
 #include <Fl/Fl_Box.H>
 #include "MIDI.h"
+#include "NoteEditor.h"
 
 
 class Keyboard {
@@ -48,6 +49,7 @@ public:
     Viewport(int x, int y, int w, int h);
 
     Keyboard* getKeyboard();
+    NoteEditor* getEditor();
     Playback* getPlayback();
     MIDIData* getMIDIData();
     virtual void draw();
@@ -58,6 +60,7 @@ public:
 
 private:
     Keyboard keyboard;
+    NoteEditor editor;
     MIDIData data;
     Playback play;
 };

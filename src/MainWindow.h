@@ -23,7 +23,6 @@
 
 class Fl_Menu_Bar;
 
-
 class PlaybackControls : public Fl_Group {
 public:
   PlaybackControls(int x, int y, Viewport *view);
