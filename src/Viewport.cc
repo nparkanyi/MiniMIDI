@@ -128,6 +128,11 @@ Keyboard* Viewport::getKeyboard()
     return &keyboard;
 }
 
+NoteEditor* Viewport::getEditor()
+{
+    return &editor;
+}
+
 Playback* Viewport::getPlayback()
 {
     return &play;
@@ -164,5 +169,6 @@ void Viewport::cbEveryFrame(void* v)
 {
     Viewport* view = static_cast<Viewport*>(v);
     view->getPlayback()->everyFrame();
+    view->redraw();
     Fl::repeat_timeout(0.001, Viewport::cbEveryFrame, v);
 }

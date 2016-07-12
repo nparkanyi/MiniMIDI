@@ -14,6 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <Fl/fl_draw.H>
 #include "MIDI.h"
 #include "Viewport.h"
 
@@ -42,7 +43,12 @@ void NoteOn::run()
 
 void NoteOn::draw()
 {
-
+    int x, y;
+    NoteEditor* editor = view->getEditor();
+    editor->getNotePos(value, getTime(), x, y);
+    //fl_rect(x, y, duration / editor->getMsPerPixel(), editor->getNoteThickness(value));
+    fl_line(x, 40, x, 500);
+    fl_rectf(310, 720, 150, 14, 255, 255, 255);
 }
 
 NoteOff::NoteOff(Viewport* view, unsigned long time, short value)
@@ -104,8 +110,12 @@ std::shared_ptr<Event> Track::getEvent(int index) const
     return events[index];
 }
 
-int Track::getEventAt(unsigned long time) const
+int Track::getEventAt(long time) const
 {
+    if (time < 0){
+        return 0;
+    }
+
     int size = events.size();
     int i = size / 2;
     int jump = i / 2;
@@ -236,6 +246,7 @@ void MIDIData::fillTrack()
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 2001, 59)));
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 2500, 57, 100, 3000)));
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 5500, 57)));
+    tracks[0].setColour(200, 0, 50);
 }
 
 int MIDIData::numTracks() const

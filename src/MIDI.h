@@ -89,7 +89,7 @@ public:
     int numEvents() const;
     std::shared_ptr<Event> getEvent(int index) const;
     //returns index of first event occurring at this time
-    int getEventAt(unsigned long time) const;
+    int getEventAt(long time) const;
 
     //this track's NoteOns will be drawn in this colour on the NoteOnEditor
     void setColour(char r, char g, char b);
