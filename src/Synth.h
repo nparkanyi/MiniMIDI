@@ -20,8 +20,8 @@
 #include <exception>
 #include <fluidsynth.h>
 
- class Synth {
- public:
+class Synth {
+public:
     Synth();
     ~Synth();
 

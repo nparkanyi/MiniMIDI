@@ -67,7 +67,7 @@ int NoteEditor::getMsPerPixel() const
 
 void NoteEditor::getNotePos(int note_value, unsigned long time, int &x, int &y) const
 {
-    x = this->x + (time - view->getPlayback()->getTime()) / 10 + 300;
+    x = this->x + ((signed long)time - (signed long)view->getPlayback()->getTime()) / ms_per_pixel + 300;
 
     y = this->y;
     for (int i = 0; i < note_value; i++) {

@@ -18,16 +18,16 @@ SettingsDialog.o: SettingsDialog.h SettingsDialog.cc
 
 Viewport.o: Viewport.h Viewport.cc
 	${CXX} Viewport.cc $(FLAGS) -c $(FLFLAGS)
-	
+
 MIDI.o: MIDI.h MIDI.cc
 	${CXX} MIDI.cc $(FLAGS) -c $(FLFLAGS)
-	
+
 Synth.o: Synth.h Synth.cc
 	${CXX} Synth.cc $(FLAGS) -c $(FLFLAGS)
-	
+
 NoteEditor.o: NoteEditor.h NoteEditor.cc
 	${CXX} NoteEditor.cc $(FLAGS) -c $(FLFLAGS)
-	
+
 libmidi.o: libmidi/midi.h libmidi/midi.c
 	${CC} libmidi/midi.c -I./libmidi -c -o libmidi.o -std=c99 -lfluidsynth
 

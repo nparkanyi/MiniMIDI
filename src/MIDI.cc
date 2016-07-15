@@ -47,6 +47,7 @@ void NoteOn::draw()
     NoteEditor* editor = view->getEditor();
     editor->getNotePos(value, getTime(), x, y);
     //fl_rect(x, y, duration / editor->getMsPerPixel(), editor->getNoteThickness(value));
+    fl_color(255, 255, 255);
     fl_line(x, 40, x, 500);
     fl_rectf(310, 720, 150, 14, 255, 255, 255);
 }
