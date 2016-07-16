@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <Fl/Fl_Window.H>
+#include <Fl/Fl_Double_Window.H>
 #include "Viewport.h"
 #include "AboutDialog.h"
 #include "SettingsDialog.h"
@@ -37,7 +37,7 @@ private:
 };
 
 
-class MainWindow : public Fl_Window {
+class MainWindow : public Fl_Double_Window {
 public:
   MainWindow();
   void quit(); //closes all child windows before quitting

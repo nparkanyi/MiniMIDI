@@ -77,7 +77,7 @@ void PlaybackControls::cbFwd(Fl_Widget* w, void* v)
 }
 
 
-MainWindow::MainWindow() : Fl_Window(RES_X, RES_Y)
+MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
 {
     label("MiniMIDI");
     size_range(920, 600);
@@ -123,7 +123,7 @@ void MainWindow::quit()
 
 void MainWindow::resize(int x, int y, int w, int h)
 {
-    Fl_Window::resize(x, y, w, h);
+    Fl_Double_Window::resize(x, y, w, h);
     //keep the playback controls centred
     controls->position(w / 2 - 70, controls->y());
 }
