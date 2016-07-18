@@ -3,7 +3,7 @@
 #include "Viewport.h"
 
 NoteEditor::NoteEditor(int x, int y, int w, int h, Viewport* view) : x(x), y(y), w(w), h(h),
-                       view(view), start_note(75), note_thickness(10), ms_per_pixel(10)
+                       view(view), start_note(40), note_thickness(10), ms_per_pixel(10)
 {}
 
 void NoteEditor::draw() const
@@ -70,7 +70,7 @@ void NoteEditor::getNotePos(int note_value, unsigned long time, int &x, int &y) 
     x = this->x + ((signed long)time - (signed long)view->getPlayback()->getTime()) / ms_per_pixel + 300;
 
     y = this->y;
-    for (int i = 0; i < note_value; i++) {
+    for (int i = start_note; i < note_value; i++) {
         if (isBlackNote(i)) {
             y += note_thickness;
         } else {
@@ -107,12 +107,17 @@ void NoteEditor::drawNotes() const
         track->getColour(r, g, b);
         fl_color(r, g, b);
 
-        for (int idx = track->getEventAt(draw_from); idx < num_events; idx++){
+        for (int idx = 0; idx < num_events; idx++){
             //stop when when the notes are off-screen
-            if (track->getEvent(idx)->getTime() > draw_from + this->w * ms_per_pixel){
+            if ((signed long)(track->getEvent(idx)->getTime()) >
+                   draw_from + this->w * ms_per_pixel){
                 break;
             }
-            track->getEvent(idx)->draw();
+            if ((signed long)(track->getEvent(idx)->getTime()) >= draw_from ||
+                    (signed long)(track->getEvent(idx)->getTime()) +
+                    track->getEvent(idx)->getDuration() >= draw_from){
+                track->getEvent(idx)->draw();
+            }
         }
     }
 }
