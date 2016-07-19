@@ -49,7 +49,7 @@ void NoteOn::draw()
     int h = editor->getNoteThickness(value);
 
     editor->getNotePos(value, getTime(), x, y);
-    fl_rectf(x, y, w, h);
+    fl_rectf(x, y + 1, w, h - 1);
 }
 
 NoteOff::NoteOff(Viewport* view, unsigned long time, short value)

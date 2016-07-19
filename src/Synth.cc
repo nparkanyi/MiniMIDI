@@ -16,9 +16,7 @@
  */
 #include "Synth.h"
 
-Synth::Synth() : is_initialized(false), settings(nullptr, delete_fluid_settings),
-                 synth(nullptr, delete_fluid_synth),
-                 adriver(nullptr, delete_fluid_audio_driver)
+Synth::Synth() : is_initialized(false)
 {}
 
 Synth::~Synth()
