@@ -5,5 +5,6 @@ MiniMIDI: $(wildcard src/*.cc) $(wildcard src/*.h)
 	cp src/MiniMIDI ./
 
 clean:
-	rm MiniMIDI;
-	cd src; make clean
+	rm MiniMIDI*;
+	rm src/*.o;
+	rm src/MiniMIDI*;

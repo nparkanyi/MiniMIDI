@@ -30,6 +30,3 @@ NoteEditor.o: NoteEditor.h NoteEditor.cc
 
 libmidi.o: libmidi/midi.h libmidi/midi.c
 	${CC} libmidi/midi.c -I./libmidi -c -o libmidi.o -std=c99 -lfluidsynth
-
-clean:
-	rm MiniMIDI; rm *.o
