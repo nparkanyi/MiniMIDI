@@ -246,11 +246,11 @@ void MIDIData::fillTrack()
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 501, 59, 100, 1500)));
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 2001, 59)));
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 2500, 57, 100, 3000)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 5500, 57)));
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 3000, 30, 100, 3000)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 6000, 0)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 3000, 127, 100, 3000)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 3000, 100, 100, 3000)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 5500, 57)));
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 6000, 100)));
+    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 6000, 30)));
     tracks[0].setColour(200, 0, 50);
 }
 
