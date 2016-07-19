@@ -152,12 +152,11 @@ void Viewport::draw()
 
 void Viewport::resize(int x, int y, int w, int h)
 {
+    Fl_Box::resize(x, y, w, h);
     editor.move(x, y);
     editor.resize(w, 3 * h / 4);
     keyboard.move(x, y + 3 * h / 4);
     keyboard.resize(w, h / 4);
-
-    Fl_Box::resize(x, y, w, h);
 }
 
 int Viewport::handle(int event)

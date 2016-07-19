@@ -2,6 +2,7 @@
 #define NOTEEDITOR_H
 
 class Viewport;
+class Fl_Scrollbar;
 
 class NoteEditor {
 public:
@@ -10,8 +11,6 @@ public:
     void draw() const;
     void move(int x, int y);
     void resize(int w, int h);
-    //sets the top note drawn on screen, by its MIDI value (0-127).
-    void scroll(int note_value);
     //sets the thickness of the drawn black notes
     void setThickness(int thickness);
     //sets the number of milliseconds per pixel
@@ -28,7 +27,8 @@ private:
 
     int x, y, w, h;
     Viewport* view;
-    int start_note;
+    Fl_Scrollbar* scroll_horiz;
+    Fl_Scrollbar* scroll_vert;
     int note_thickness;
     int ms_per_pixel;
 };
