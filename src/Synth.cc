@@ -16,40 +16,30 @@
  */
 #include "Synth.h"
 
-Synth::Synth() : is_initialized(false), settings(nullptr), synth(nullptr), adriver(nullptr)
+Synth::Synth() : is_initialized(false), settings(nullptr, delete_fluid_settings),
+                 synth(nullptr, delete_fluid_synth),
+                 adriver(nullptr, delete_fluid_audio_driver)
 {}
 
 Synth::~Synth()
 {
-    fluid_synth_sfunload(synth, sf_handle, 0);
-    delete_fluid_audio_driver(adriver);
-    delete_fluid_synth(synth);
-    delete_fluid_settings(settings);
+    fluid_synth_sfunload(synth.get(), sf_handle, 0);
 }
 
 void Synth::load(std::string driver, std::string sf_file)
 {
-    settings = new_fluid_settings();
-    synth = new_fluid_synth(settings);
+    settings.reset(new_fluid_settings(), delete_fluid_settings);
+    synth.reset(new_fluid_synth(settings.get()), delete_fluid_synth);
     if (!synth){
-        delete_fluid_settings(settings);
-        settings = nullptr;
         throw FluidInitFail();
     }
-    fluid_settings_setstr(settings, "audio.driver", driver.c_str());
-    adriver = new_fluid_audio_driver(settings, synth);
+    fluid_settings_setstr(settings.get(), "audio.driver", driver.c_str());
+    adriver.reset(new_fluid_audio_driver(settings.get(), synth.get()), delete_fluid_audio_driver);
     if (!adriver){
-        delete_fluid_synth(synth);
-        delete_fluid_settings(settings);
-        settings = nullptr; synth = nullptr;
         throw FluidDriverFail();
     }
-    sf_handle = fluid_synth_sfload(synth, sf_file.c_str(), 1);
+    sf_handle = fluid_synth_sfload(synth.get(), sf_file.c_str(), 1);
     if (sf_handle == FLUID_FAILED){
-        delete_fluid_audio_driver(adriver);
-        delete_fluid_synth(synth);
-        delete_fluid_settings(settings);
-        adriver = nullptr; settings = nullptr; synth = nullptr;
         throw FluidSFFail();
     }
 
@@ -68,17 +58,17 @@ std::string Synth::getSF()
 
 void Synth::noteOn(short value, int velocity)
 {
-    fluid_synth_noteon(synth, 0, value, velocity);
+    fluid_synth_noteon(synth.get(), 0, value, velocity);
 }
 
 void Synth::noteOff(short value)
 {
-    fluid_synth_noteoff(synth, 0, value);
+    fluid_synth_noteoff(synth.get(), 0, value);
 }
 
 void Synth::clear()
 {
     for (int i = 0; i <= 127; i++){
-        fluid_synth_noteoff(synth, 0, i);
+        fluid_synth_noteoff(synth.get(), 0, i);
     }
 }

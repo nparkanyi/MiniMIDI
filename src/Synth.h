@@ -18,6 +18,7 @@
  */
 #include <string>
 #include <exception>
+#include <memory>
 #include <fluidsynth.h>
 
 class Synth {
@@ -62,9 +63,9 @@ private:
     bool is_initialized;
     std::string driver;
     std::string sf_file;
-    fluid_settings_t* settings;
-    fluid_synth_t* synth;
-    fluid_audio_driver_t* adriver;
+    std::shared_ptr<fluid_settings_t> settings;
+    std::shared_ptr<fluid_synth_t> synth;
+    std::shared_ptr<fluid_audio_driver_t> adriver;
     int sf_handle;
 };
 
