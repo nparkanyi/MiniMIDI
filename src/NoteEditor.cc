@@ -30,6 +30,8 @@ void NoteEditor::draw() const
             fl_line(x, y + line_y, x + w, y + line_y);
             line_y += note_thickness + 4;
         }
+        drawNoteName(i, x + 4, y + line_y - 2);
+        fl_color(150, 150, 150);
     }
 
     drawNotes();
@@ -128,5 +130,43 @@ void NoteEditor::drawNotes() const
                 track->getEvent(idx)->draw();
             }
         }
+    }
+}
+
+void NoteEditor::drawNoteName(int note, int x, int y) const
+{
+    int value = note % 12;
+    fl_color(50, 230, 50);
+    fl_font(FL_COURIER|FL_BOLD|FL_ITALIC, 15);
+
+    switch(value){
+        case 0:
+            if (note == 60){ //middle C
+                fl_color(200, 50, 50);
+            } else {
+                fl_color(0, 255, 255); //every other C is cyan
+            }
+            fl_draw("C", x, y);
+            break;
+        case 2:
+            fl_draw("D", x, y);
+            break;
+        case 4:
+            fl_draw("E", x, y);
+            break;
+        case 5:
+            fl_draw("F", x, y);
+            break;
+        case 7:
+            fl_draw("G", x, y);
+            break;
+        case 9:
+            fl_draw("A", x, y);
+            break;
+        case 11:
+            fl_draw("B", x, y);
+            break;
+        default:
+            break;
     }
 }

@@ -24,6 +24,7 @@ public:
 private:
     bool isBlackNote(int note_value) const;
     void drawNotes() const;
+    void drawNoteName(int note, int x, int y) const;
 
     int x, y, w, h;
     Viewport* view;
