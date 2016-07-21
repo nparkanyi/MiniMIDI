@@ -68,6 +68,7 @@ SettingsDialog::SettingsDialog(Viewport* view) : Fl_Window(RESX, RESY), view(vie
     chooser = new Fl_File_Chooser("./", "SF2 Files (*.sf2)",
                                   Fl_File_Chooser::SINGLE,
                                   "Choose soundfont");
+    chooser->preview(0);
 }
 
 void SettingsDialog::cbChangeScheme(Fl_Widget* w, void *v)
