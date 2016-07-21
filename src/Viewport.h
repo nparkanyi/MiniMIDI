@@ -16,6 +16,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef DEFAULT_SF2
+#define DEFAULT_SF2 "soundfonts/GeneralUser_GS_SoftSynth_v1.44.sf2"
+#endif
+#ifndef DEFAULT_DRIVER
+#define DEFAULT_DRIVER "dsound"
+#endif
+
 #include <array>
 #include <Fl/Fl.H>
 #include <Fl/Fl_Box.H>

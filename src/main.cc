@@ -14,14 +14,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <memory>
 #include <Fl/Fl.H>
 #include <Fl/Fl_Preferences.H>
 #include "MainWindow.h"
 
 void loadPrefs()
 {
-  Fl_Preferences* prefs = new Fl_Preferences(Fl_Preferences::USER,
-                                             "MiniMIDI", "MiniMIDI");
+  std::shared_ptr<Fl_Preferences> prefs(new Fl_Preferences(Fl_Preferences::USER,
+                                                           "MiniMIDI", "MiniMIDI"));
   char* scheme;
   prefs->get("scheme", scheme, "gtk+");
   Fl::scheme(scheme);

@@ -41,7 +41,17 @@ void Synth::load(std::string driver, std::string sf_file)
         throw FluidSFFail();
     }
 
+    this->sf_file = sf_file;
+    this->driver = driver;
     is_initialized = true;
+}
+
+void Synth::reload(std::string driver, std::string sf_file)
+{
+    adriver.reset();
+    synth.reset();
+    settings.reset();
+    load(driver, sf_file);
 }
 
 std::string Synth::getDriver()

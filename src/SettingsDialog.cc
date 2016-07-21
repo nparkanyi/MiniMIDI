@@ -15,16 +15,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cstring>
+#include <exception>
+#include <memory>
 #include <Fl/Fl.H>
 #include "SettingsDialog.h"
+#include "Viewport.h"
+#include "Synth.h"
 #include <Fl/Fl_Choice.H>
 #include <Fl/Fl_Menu_Item.H>
 #include <Fl/Fl_Return_Button.H>
 #include <Fl/Fl_Preferences.H>
+#include <Fl/fl_ask.H>
 #define RESX 700
-#define RESY 100
+#define RESY 130
 
-SettingsDialog::SettingsDialog() : Fl_Window(RESX, RESY)
+SettingsDialog::SettingsDialog(Viewport* view) : Fl_Window(RESX, RESY), view(view)
 {
     label("Settings");
 
@@ -51,6 +56,18 @@ SettingsDialog::SettingsDialog() : Fl_Window(RESX, RESY)
     Fl_Return_Button* btn = new Fl_Return_Button(RESX - 60, RESY - 40, 50, 30);
     btn->callback(cbClose, this);
     btn->label("OK");
+
+    sf2_filename = new Fl_Box(41, 50, 400, 30);
+    sf2_filename->align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE);
+    updateSF2Filename();
+
+    Fl_Button* open_chooser = new Fl_Button(450, 50, 100, 30);
+    open_chooser->callback(cbFileChooser, this);
+    open_chooser->label("Choose");
+
+    chooser = new Fl_File_Chooser("./", "SF2 Files (*.sf2)",
+                                  Fl_File_Chooser::SINGLE,
+                                  "Choose soundfont");
 }
 
 void SettingsDialog::cbChangeScheme(Fl_Widget* w, void *v)
@@ -105,7 +122,10 @@ void SettingsDialog::cbChangeColour(Fl_Widget* w, void* v)
 
 void SettingsDialog::cbClose(Fl_Widget* w, void* v)
 {
-    Fl_Preferences* prefs = new Fl_Preferences(Fl_Preferences::USER, "MiniMIDI", "MiniMIDI");
+    std::shared_ptr<Fl_Preferences> prefs(new Fl_Preferences(Fl_Preferences::USER,
+                                                             "MiniMIDI", "MiniMIDI"));
+    SettingsDialog* diag = static_cast<SettingsDialog*>(v);
+
     prefs->set("scheme", Fl::scheme());
 
     unsigned char r, g, b;
@@ -122,9 +142,28 @@ void SettingsDialog::cbClose(Fl_Widget* w, void* v)
     prefs->set("fg_g", g);
     prefs->set("fg_b", b);
 
+    prefs->set("soundfont", diag->view->getPlayback()->getSynth()->getSF().c_str());
     prefs->flush();
 
-    static_cast<SettingsDialog*>(v)->hide();
+    diag->hide();
+}
+
+void SettingsDialog::cbFileChooser(Fl_Widget* w, void* v)
+{
+    SettingsDialog* diag = static_cast<SettingsDialog*>(v);
+    Synth* synth = diag->view->getPlayback()->getSynth();
+    diag->chooser->show();
+    while (diag->chooser->shown()){
+        Fl::wait();
+    }
+    if (diag->chooser->value() != NULL){
+        try {
+            synth->reload(synth->getDriver(), std::string(diag->chooser->value()));
+        } catch (std::exception &e){
+            fl_alert(e.what());
+        }
+        diag->updateSF2Filename();
+    }
 }
 
 int SettingsDialog::schemeIndex()
@@ -164,4 +203,15 @@ int SettingsDialog::colourIndex()
             return 3;
             break;
     }
+}
+
+void SettingsDialog::updateSF2Filename()
+{
+    file = view->getPlayback()->getSynth()->getSF();
+    if (file.size() > 40){
+        file = std::string("Soundfont: ...") + file.substr(file.size() - 38, 37);
+    } else {
+        file = std::string("Soundfont: ") + file;
+    }
+    sf2_filename->label(file.c_str());
 }

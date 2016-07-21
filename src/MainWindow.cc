@@ -92,7 +92,7 @@ MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
     about_dialog = new AboutDialog();
     begin();
 
-    settings_dialog = new SettingsDialog();
+    settings_dialog = new SettingsDialog(view);
     begin();
 
     Fl_Menu_Item items[] = { { "&File", 0, 0, 0, FL_SUBMENU},

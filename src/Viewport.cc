@@ -16,8 +16,10 @@
  */
 #include <cmath>
 #include <cstdio>
+#include <memory>
 #include <Fl/fl_draw.H>
 #include <Fl/fl_ask.H>
+#include <Fl/Fl_Preferences.H>
 #include "Viewport.h"
 
 Keyboard::Keyboard(int x, int y, int w, int h, Viewport* view) : x(x), y(y), w(w), h(h)
@@ -114,8 +116,13 @@ Viewport::Viewport(int x, int y, int w, int h)
                      keyboard(x, y + 3 * h / 4, w, h / 4, this), editor(x, y, w, 3 * h / 4, this),
                      data(this), play(this)
 {
+    std::shared_ptr<Fl_Preferences> prefs(new Fl_Preferences(Fl_Preferences::USER,
+                                                             "MiniMIDI", "MiniMIDI"));
+    char* sf2;
+
+    prefs->get("soundfont", sf2, DEFAULT_SF2);
     try {
-        play.getSynth()->load("dsound", "GeneralUser GS 1.44 SoftSynth\\GeneralUser GS SoftSynth v1.44.sf2");
+        play.getSynth()->load(DEFAULT_DRIVER, std::string(sf2));
     } catch (std::exception &e){
         fl_alert(e.what());
     }

@@ -16,22 +16,34 @@
    *  You should have received a copy of the GNU General Public License
    *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
    */
+#include <string>
 #include <Fl/Fl_Window.H>
 #include <Fl/Fl_Choice.H>
+#include <Fl/Fl_Box.H>
+#include <Fl/Fl_File_Chooser.H>
+
+class Viewport;
 
 class SettingsDialog : public Fl_Window
 {
 public:
-  SettingsDialog();
+  SettingsDialog(Viewport* view);
 
   static void cbClose(Fl_Widget* w, void* v);
   static void cbChangeColour(Fl_Widget* w, void* v);
   static void cbChangeScheme(Fl_Widget* w, void* v);
+  static void cbFileChooser(Fl_Widget* w, void* v);
 
 private:
   //these return the dropdown index of the current widget and colour schemes
   int schemeIndex();
   int colourIndex();
+  void updateSF2Filename();
+
+  Viewport* view;
+  Fl_Box* sf2_filename;
+  std::string file;
+  Fl_File_Chooser* chooser;
 };
 
 #endif /* SETTINGSDIALOG_H */
