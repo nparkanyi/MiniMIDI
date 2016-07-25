@@ -153,13 +153,19 @@ void SettingsDialog::cbFileChooser(Fl_Widget* w, void* v)
 {
     SettingsDialog* diag = static_cast<SettingsDialog*>(v);
     Synth* synth = diag->view->getPlayback()->getSynth();
+    std::string driver = synth->getDriver();
+
+    if (driver == std::string("")){
+        driver = std::string(DEFAULT_DRIVER);
+    }
+
     diag->chooser->show();
     while (diag->chooser->shown()){
         Fl::wait();
     }
     if (diag->chooser->value() != NULL){
         try {
-            synth->reload(synth->getDriver(), std::string(diag->chooser->value()));
+            synth->reload(driver, std::string(diag->chooser->value()));
         } catch (std::exception &e){
             fl_alert(e.what());
         }
