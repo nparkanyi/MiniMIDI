@@ -22,7 +22,7 @@
 #include <Fl/Fl_Preferences.H>
 #include "Viewport.h"
 
-Keyboard::Keyboard(int x, int y, int w, int h, Viewport* view) : x(x), y(y), w(w), h(h)
+Keyboard::Keyboard(int x, int y, int w, int h, Viewport* view) : x(x), y(y), w(w), h(h), view(view)
 {
     key_width = w / 52; //key_width is the width of a white key
     n = std::ceil(2.0f / (static_cast<float>(w) / 52.0f - key_width));
@@ -168,6 +168,9 @@ void Viewport::resize(int x, int y, int w, int h)
 
 int Viewport::handle(int event)
 {
+    if (event == Fl_Event::FL_PUSH){
+        editor.mouseDown(Fl::event_x(), Fl::event_y());
+    }
     return Fl_Box::handle(event);
 }
 

@@ -1,7 +1,9 @@
+#include <sstream>
 #include <Fl/fl_draw.H>
 #include <Fl/Fl_Scrollbar.H>
 #include "NoteEditor.h"
 #include "Viewport.h"
+#include <Fl/fl_ask.H>
 
 #define SCROLLWIDTH 20
 
@@ -54,6 +56,15 @@ void NoteEditor::resize(int w, int h)
     this->w = w;
     this->h = h;
     scroll_vert->resize(x + w - SCROLLWIDTH - 2, y + 1, SCROLLWIDTH, h - 2);
+}
+
+void NoteEditor::mouseDown(int mouse_x, int mouse_y)
+{
+    std::ostringstream os;
+    std::string str;
+    os << noteFromPos(mouse_y);
+    str = os.str();
+    fl_alert(str.c_str());
 }
 
 void NoteEditor::setThickness(int thickness)
@@ -170,4 +181,21 @@ void NoteEditor::drawNoteName(int note, int x, int y) const
         default:
             break;
     }
+}
+
+int NoteEditor::noteFromPos(int pos_y) const
+{
+    int px = y;
+    for (int note = scroll_vert->value(); note <= 127; note++){
+        if (isBlackNote(note)){
+            px += note_thickness;
+        } else {
+            px += note_thickness + 4;
+        }
+
+        if (pos_y <= px){
+            return note;
+        }
+    }
+    return -1;
 }

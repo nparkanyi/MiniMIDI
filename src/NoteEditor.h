@@ -11,6 +11,11 @@ public:
     void draw() const;
     void move(int x, int y);
     void resize(int w, int h);
+
+    //report mouse events
+    void mouseDown(int mouse_x, int mouse_y);
+    void mouseRelease(int mouse_x, int mouse_y);
+
     //sets the thickness of the drawn black notes
     void setThickness(int thickness);
     //sets the number of milliseconds per pixel
@@ -25,6 +30,8 @@ private:
     bool isBlackNote(int note_value) const;
     void drawNotes() const;
     void drawNoteName(int note, int x, int y) const;
+    //get the MIDI note value of the note at this y value
+    int noteFromPos(int pos_y) const;
 
     int x, y, w, h;
     Viewport* view;
