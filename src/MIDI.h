@@ -97,10 +97,8 @@ public:
     void getColour(char &r, char &g, char &b) const;
 
 private:
-    Viewport* view;
     std::vector<std::shared_ptr<Event>> events;
     char r, g, b;
-    int index;
 };
 
 class Playback {

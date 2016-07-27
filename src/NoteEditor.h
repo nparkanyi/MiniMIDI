@@ -28,7 +28,6 @@ private:
 
     int x, y, w, h;
     Viewport* view;
-    Fl_Scrollbar* scroll_horiz;
     Fl_Scrollbar* scroll_vert;
     int note_thickness;
     int ms_per_pixel;

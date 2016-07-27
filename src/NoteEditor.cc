@@ -10,6 +10,7 @@ NoteEditor::NoteEditor(int x, int y, int w, int h, Viewport* view) : x(x), y(y),
 {
     scroll_vert = new Fl_Scrollbar(x + w - SCROLLWIDTH - 2, y + 1, SCROLLWIDTH, h - 2);
     scroll_vert->value(40, 30, 0, 127);
+    scroll_vert->linesize(2);
 }
 
 void NoteEditor::draw() const
