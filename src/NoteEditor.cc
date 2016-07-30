@@ -61,10 +61,8 @@ void NoteEditor::resize(int w, int h)
 void NoteEditor::mouseDown(int mouse_x, int mouse_y)
 {
     std::ostringstream os;
-    std::string str;
     os << noteFromPos(mouse_y);
-    str = os.str();
-    fl_alert(str.c_str());
+    fl_alert(os.str().c_str());
 }
 
 void NoteEditor::setThickness(int thickness)

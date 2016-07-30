@@ -87,7 +87,14 @@ unsigned long Track::getDuration() const
 
 void Track::addEvent(std::shared_ptr<Event> ev)
 {
-    events.push_back(ev);
+    //index of first event occurring at the same time or after the event
+    //we are inserting
+    int idx = getEventAt(ev->getTime());
+    if (idx > 0){
+        events.insert(events.begin() + idx, ev);
+    } else {
+        events.push_back(ev);
+    }
 }
 
 void Track::removeEvent(std::shared_ptr<Event> ev)
@@ -122,6 +129,10 @@ int Track::getEventAt(long time) const
     int jump = i / 2;
     if (jump == 0) { jump = 1; }
 
+    //if no event occurs before the given time, return -1
+    if (events.empty() || events[size - 1]->getTime() < time){
+        return -1;
+    }
     //find first event that occurs at or after the given time
     while (i > 0 && i < size - 1 &&
            !(events[i-1]->getTime() < time && events[i]->getTime() >= time)){
