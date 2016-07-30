@@ -126,7 +126,7 @@ Viewport::Viewport(int x, int y, int w, int h)
     } catch (std::exception &e){
         fl_alert(e.what());
     }
-    data.fillTrack();
+    data.newTrack();
     Fl::add_timeout(0.001, Viewport::cbEveryFrame, this);
 }
 

@@ -251,7 +251,6 @@ MIDIData::MIDIData(Viewport* view) : view(view), filename("")
 
 void MIDIData::fillTrack()
 {
-    newTrack();
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 0, 60, 100, 500)));
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 500, 60)));
     tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 501, 59, 100, 1500)));
@@ -278,4 +277,5 @@ Track* MIDIData::getTrack(int index)
 void MIDIData::newTrack()
 {
     tracks.push_back(Track());
+    tracks[tracks.size() - 1].setColour(200, 50, 50);
 }
