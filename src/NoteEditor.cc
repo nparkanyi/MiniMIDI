@@ -5,6 +5,7 @@
 #include "Viewport.h"
 #include <Fl/fl_ask.H>
 
+#define BAROFFSET 300
 #define SCROLLWIDTH 20
 
 NoteEditor::NoteEditor(int x, int y, int w, int h, Viewport* view) : x(x), y(y), w(w), h(h),
@@ -39,7 +40,7 @@ void NoteEditor::draw() const
 
     drawNotes();
     fl_color(0, 50, 200);
-    fl_line(x + 300, y, x + 300, y + h);
+    fl_line(x + BAROFFSET, y, x + BAROFFSET, y + h);
     scroll_vert->redraw();
     fl_pop_clip();
 }
@@ -60,9 +61,9 @@ void NoteEditor::resize(int w, int h)
 
 void NoteEditor::mouseDown(int mouse_x, int mouse_y)
 {
-    std::ostringstream os;
-    os << noteFromPos(mouse_y);
-    fl_alert(os.str().c_str());
+    long time = getMsPerPixel() * (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
+    std::shared_ptr<Event> ev(new NoteOn(view, time, noteFromPos(mouse_y), 100, 2000));
+    view->getMIDIData()->getTrack(0)->addEvent(ev);
 }
 
 void NoteEditor::setThickness(int thickness)
@@ -116,7 +117,7 @@ bool NoteEditor::isBlackNote(int i) const
 
 void NoteEditor::drawNotes() const
 {
-    long draw_from = view->getPlayback()->getTime() - 300 * ms_per_pixel;
+    long draw_from = view->getPlayback()->getTime() - BAROFFSET * ms_per_pixel;
     int num_tracks = view->getMIDIData()->numTracks();
     int num_events;
     Track* track;
