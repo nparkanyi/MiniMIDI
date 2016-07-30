@@ -1,8 +1,10 @@
 #ifndef NOTEEDITOR_H
 #define NOTEEDITOR_H
+#include <memory>
 
 class Viewport;
 class Fl_Scrollbar;
+class Event;
 
 class NoteEditor {
 public:
@@ -14,6 +16,7 @@ public:
 
     //report mouse events
     void mouseDown(int mouse_x, int mouse_y);
+    void mouseDrag(int mouse_x, int mouse_y);
     void mouseRelease(int mouse_x, int mouse_y);
 
     //sets the thickness of the drawn black notes
@@ -38,6 +41,8 @@ private:
     Fl_Scrollbar* scroll_vert;
     int note_thickness;
     int ms_per_pixel;
+
+    std::shared_ptr<Event> drag_note;
 };
 
 #endif // NOTEEDITOR_H

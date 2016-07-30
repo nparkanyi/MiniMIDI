@@ -36,6 +36,7 @@ public:
     std::string getType() const { return type; }
     unsigned long getTime() const { return time; }
     virtual int getDuration() const { return 0; }
+    virtual void setDuration(int duration) { return; }
     //executed when we reach this event during playback
     virtual void run() = 0;
     //executed when the note is to be drawn on the note editor
@@ -57,6 +58,7 @@ public:
 
     short getValue() const;
     virtual int getDuration() const;
+    virtual void setDuration(int duration);
     virtual void run();
     virtual void draw();
 

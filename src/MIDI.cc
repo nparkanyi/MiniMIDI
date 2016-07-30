@@ -34,6 +34,11 @@ int NoteOn::getDuration() const
     return duration;
 }
 
+void NoteOn::setDuration(int duration)
+{
+    this->duration = duration;
+}
+
 void NoteOn::run()
 {
     view->getPlayback()->getSynth()->noteOn(value, velocity);

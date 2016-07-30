@@ -170,6 +170,13 @@ int Viewport::handle(int event)
 {
     if (event == Fl_Event::FL_PUSH){
         editor.mouseDown(Fl::event_x(), Fl::event_y());
+        return 1;
+    } else if (event == Fl_Event::FL_DRAG){
+        editor.mouseDrag(Fl::event_x(), Fl::event_y());
+        return 1;
+    } else if (event == Fl_Event::FL_RELEASE){
+        editor.mouseRelease(Fl::event_x(), Fl::event_y());
+        return 1;
     }
     return Fl_Box::handle(event);
 }
