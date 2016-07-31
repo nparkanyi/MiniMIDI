@@ -95,7 +95,7 @@ void Track::addEvent(std::shared_ptr<Event> ev)
     //index of first event occurring at the same time or after the event
     //we are inserting
     int idx = getEventAt(ev->getTime());
-    if (idx > 0){
+    if (idx >= 0){
         events.insert(events.begin() + idx, ev);
     } else {
         events.push_back(ev);
