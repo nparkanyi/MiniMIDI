@@ -63,7 +63,9 @@ void NoteEditor::mouseDown(int mouse_x, int mouse_y)
 {
     long time = getMsPerPixel() * (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
     std::shared_ptr<Event> ev(new NoteOn(view, time, noteFromPos(mouse_y), 100, 10));
-    view->getMIDIData()->getTrack(0)->addEvent(ev);
+    if (time > 0){
+        view->getMIDIData()->getTrack(0)->addEvent(ev);
+    }
     drag_note = ev;
 }
 
@@ -79,7 +81,9 @@ void NoteEditor::mouseRelease(int mouse_x, int mouse_y)
 {
     long time = getMsPerPixel() *  (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
     std::shared_ptr<Event> ev(new NoteOff(view, time, static_cast<NoteOn*>(drag_note.get())->getValue()));
-    view->getMIDIData()->getTrack(0)->addEvent(ev);
+    if (drag_note->getTime() > 0){
+        view->getMIDIData()->getTrack(0)->addEvent(ev);
+    }
 }
 
 void NoteEditor::setThickness(int thickness)
