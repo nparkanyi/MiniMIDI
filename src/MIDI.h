@@ -91,7 +91,8 @@ public:
     void removeEvent(std::shared_ptr<Event> ev);
     int numEvents() const;
     std::shared_ptr<Event> getEvent(int index) const;
-    //returns index of first event occurring at this time
+    //returns index of first event occurring at or after this time, or -1
+    //if there are no such events
     int getEventAt(long time) const;
 
     //this track's NoteOns will be drawn in this colour on the NoteOnEditor

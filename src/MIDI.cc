@@ -134,13 +134,15 @@ int Track::getEventAt(long time) const
     int jump = i / 2;
     if (jump == 0) { jump = 1; }
 
-    //if no event occurs before the given time, return -1
+    //if no event occurs at or after the given time, return -1
     if (events.empty() || events[size - 1]->getTime() < time){
         return -1;
     }
+
     //find first event that occurs at or after the given time
-    while (i > 0 && i < size - 1 &&
-           !(events[i-1]->getTime() < time && events[i]->getTime() >= time)){
+    while (i >= 0 && i <= size - 1 &&
+           !((i == 0 || events[i-1]->getTime() < time)
+             && events[i]->getTime() >= time)){
         jump /= 2;
         if (jump == 0) { jump = 1; }
         if (events[i]->getTime() < time){
@@ -196,6 +198,10 @@ void Playback::seek(unsigned long time)
     for (int i = 0; i < num_tracks; i++){
         track = data->getTrack(i);
         track_indices[i] = track->getEventAt(time);
+        if (track_indices[i] == -1){
+            track_indices[i] = track->numEvents(); //the track is over,
+                                                   //set index to last event + 1
+        }
     }
     view->getKeyboard()->clear();
     view->redraw();
