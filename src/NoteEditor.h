@@ -18,6 +18,7 @@ public:
     void mouseDown(int mouse_x, int mouse_y);
     void mouseDrag(int mouse_x, int mouse_y);
     void mouseRelease(int mouse_x, int mouse_y);
+    void rightRelease(int mouse_x, int mouse_y);
 
     //sets the thickness of the drawn black notes
     void setThickness(int thickness);

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sstream>
 #include <Fl/fl_draw.H>
 #include <Fl/Fl_Scrollbar.H>
@@ -83,6 +84,15 @@ void NoteEditor::mouseRelease(int mouse_x, int mouse_y)
     std::shared_ptr<Event> ev(new NoteOff(view, time, static_cast<NoteOn*>(drag_note.get())->getValue()));
     if (drag_note->getTime() > 0){
         view->getMIDIData()->getTrack(0)->addEvent(ev);
+    }
+}
+
+void NoteEditor::rightRelease(int mouse_x, int mouse_y)
+{
+    long time = getMsPerPixel() * (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
+    int value = noteFromPos(mouse_y);
+    if (time > 0){
+        view->getMIDIData()->getTrack(0)->removeEventsAt(time, value);
     }
 }
 

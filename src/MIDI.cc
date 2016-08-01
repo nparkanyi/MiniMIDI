@@ -113,6 +113,28 @@ void Track::removeEvent(std::shared_ptr<Event> ev)
     }
 }
 
+void Track::removeEventsAt(unsigned long time, int value)
+{
+    int trk_size = numEvents();
+    //find NoteOn events that are occurring at time on this note
+    for (int idx = 0; idx < trk_size; idx++){
+        if (getEvent(idx)->getTime() <= time &&
+                time <= getEvent(idx)->getTime() + getEvent(idx)->getDuration() &&
+                getEvent(idx)->getType() == std::string("NoteOn") &&
+                static_cast<NoteOn*>(getEvent(idx).get())->getValue() == value){
+            //find the associated NoteOff event
+            for (int i = idx; i < trk_size; i++){
+                if (getEvent(i)->getType() == std::string("NoteOff") &&
+                        static_cast<NoteOff*>(getEvent(i).get())->getValue() == value){
+                    removeEvent(getEvent(idx));
+                    removeEvent(getEvent(i));
+                    return;
+                }
+            }
+        }
+    }
+}
+
 int Track::numEvents() const
 {
     return events.size();
