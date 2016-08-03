@@ -21,7 +21,7 @@
 #include "license_text.h"
 #include "notes_pixmap.h"
 #define RESX 600
-#define RESY 360
+#define RESY 380
 
 AboutDialog::AboutDialog() : Fl_Window(RESX, RESY)
 {
@@ -37,12 +37,15 @@ AboutDialog::AboutDialog() : Fl_Window(RESX, RESY)
   logo->labeltype(FL_NORMAL_LABEL);
   logo->labelsize(18);
 
-  Fl_Box* copyright = new Fl_Box(FL_NO_BOX, RESX / 2 - 100, 100, 200, 20, "Copyright © 2016 Nicholas Parkanyi");
+  Fl_Box* version = new Fl_Box(FL_NO_BOX, RESX / 2 - 100, 100, 200, 20, MINIMIDI_VERSION);
+  version->align(FL_ALIGN_CENTER);
+
+  Fl_Box* copyright = new Fl_Box(FL_NO_BOX, RESX / 2 - 100, 120, 200, 20, "Copyright © 2016 Nicholas Parkanyi");
   copyright->align(FL_ALIGN_CENTER);
 
   Fl_Text_Buffer* buf = new Fl_Text_Buffer();
   buf->text(gpl_v3);
-  Fl_Text_Display* dsp = new Fl_Text_Display(10, 130, RESX - 20, RESY - 180);
+  Fl_Text_Display* dsp = new Fl_Text_Display(10, 150, RESX - 20, RESY - 200);
   dsp->buffer(buf);
 }
 
