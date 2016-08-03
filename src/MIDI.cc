@@ -14,6 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <iostream>
 #include <Fl/fl_draw.H>
 #include "MIDI.h"
 #include "Viewport.h"
@@ -59,8 +60,7 @@ void NoteOn::draw()
 
 NoteOff::NoteOff(Viewport* view, unsigned long time, short value)
                  : Event(view, "NoteOff", time), value(value)
-{
-}
+{}
 
 short NoteOff::getValue() const
 {
@@ -116,6 +116,7 @@ void Track::removeEvent(std::shared_ptr<Event> ev)
 void Track::removeNotesAt(unsigned long time, int value)
 {
     int trk_size = numEvents();
+
     //find NoteOn events that are occurring at time on this note
     for (int idx = 0; idx < trk_size; idx++){
         if (getEvent(idx)->getTime() <= time &&
@@ -127,7 +128,7 @@ void Track::removeNotesAt(unsigned long time, int value)
                 if (getEvent(i)->getType() == std::string("NoteOff") &&
                         static_cast<NoteOff*>(getEvent(i).get())->getValue() == value){
                     removeEvent(getEvent(idx));
-                    removeEvent(getEvent(i));
+                    removeEvent(getEvent(--i)); //decr. i because we've removed an event,
                     return;
                 }
             }

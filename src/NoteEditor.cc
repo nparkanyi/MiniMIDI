@@ -87,6 +87,7 @@ void NoteEditor::mouseRelease(int mouse_x, int mouse_y)
         //user tried to drag left of note start; invalid, so we remove the NoteOn added earlier
         view->getMIDIData()->getTrack(0)->removeEvent(drag_note);
     }
+    drag_note.reset();
 }
 
 void NoteEditor::rightRelease(int mouse_x, int mouse_y)
