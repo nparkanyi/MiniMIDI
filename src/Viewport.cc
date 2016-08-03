@@ -168,18 +168,23 @@ void Viewport::resize(int x, int y, int w, int h)
 
 int Viewport::handle(int event)
 {
-    if (event == Fl_Event::FL_PUSH && Fl::event_button() == FL_LEFT_MOUSE){
-        editor.mouseDown(Fl::event_x(), Fl::event_y());
-        return 1;
-    } else if (event == Fl_Event::FL_DRAG && Fl::event_button() == FL_LEFT_MOUSE){
-        editor.mouseDrag(Fl::event_x(), Fl::event_y());
-        return 1;
-    } else if (event == Fl_Event::FL_RELEASE && Fl::event_button() == FL_LEFT_MOUSE){
-        editor.mouseRelease(Fl::event_x(), Fl::event_y());
-        return 1;
-    } else if (event == Fl_Event::FL_RELEASE && Fl::event_button() == FL_RIGHT_MOUSE){
-        editor.rightRelease(Fl::event_x(), Fl::event_y());
-        return 1;
+    int mouse_x = Fl::event_x();
+    int mouse_y = Fl::event_y();
+    if (mouse_x > x() && mouse_x < x() + w() &&
+            mouse_y > y() && mouse_y < y() + h()){
+        if (event == Fl_Event::FL_PUSH && Fl::event_button() == FL_LEFT_MOUSE){
+            editor.mouseDown(mouse_x, mouse_y);
+            return 1;
+        } else if (event == Fl_Event::FL_DRAG && Fl::event_button() == FL_LEFT_MOUSE){
+            editor.mouseDrag(mouse_x, mouse_y);
+            return 1;
+        } else if (event == Fl_Event::FL_RELEASE && Fl::event_button() == FL_LEFT_MOUSE){
+            editor.mouseRelease(mouse_x, mouse_y);
+            return 1;
+        } else if (event == Fl_Event::FL_RELEASE && Fl::event_button() == FL_RIGHT_MOUSE){
+            editor.rightRelease(mouse_x, mouse_y);
+            return 1;
+        }
     }
     return Fl_Box::handle(event);
 }
