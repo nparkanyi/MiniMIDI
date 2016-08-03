@@ -89,7 +89,8 @@ public:
     unsigned long getDuration() const;
     void addEvent(std::shared_ptr<Event> ev);
     void removeEvent(std::shared_ptr<Event> ev);
-    void removeEventsAt(unsigned long time, int value);
+    //removes the NoteOn and NoteOff events of any note of this value occurring at time
+    void removeNotesAt(unsigned long time, int value);
     int numEvents() const;
     std::shared_ptr<Event> getEvent(int index) const;
     //returns index of first event occurring at or after this time, or -1
