@@ -1,0 +1,6 @@
+Version 0.1
+===========
+-basic note editing (left click + drag to insert, right
+click delete)
+-themeable UI (colour scheme and widget scheme)
+-can't load or save MIDI files yet, limited to one track
