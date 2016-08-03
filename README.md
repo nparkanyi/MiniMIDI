@@ -1,6 +1,6 @@
 MiniMIDI
 ========
-MiniMIDI is a simple, lightweight, cross-platform MIDI viewer and editor, built with
+MiniMIDI is a simple, lightweight, cross-platform MIDI player and editor, built with
 FLTK. It is a work in progress.
 
 Requires FLTK v1.3.3 and fluidsynth.
