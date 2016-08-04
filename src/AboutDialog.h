@@ -23,10 +23,10 @@
 
 class AboutDialog : public Fl_Window {
 public:
-  AboutDialog();
+    AboutDialog();
 
-  //v is a pointer to AboutDialog
-  static void cbClose(Fl_Widget* w, void* v);
+    //v is a pointer to AboutDialog
+    static void cbClose(Fl_Widget* w, void* v);
 };
 
 #endif /* ABOUTDIALOG_H */

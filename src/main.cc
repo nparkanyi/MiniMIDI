@@ -21,27 +21,27 @@
 
 void loadPrefs()
 {
-  std::shared_ptr<Fl_Preferences> prefs(new Fl_Preferences(Fl_Preferences::USER,
-                                                           "MiniMIDI", "MiniMIDI"));
-  char* scheme;
-  prefs->get("scheme", scheme, "gtk+");
-  Fl::scheme(scheme);
+    std::shared_ptr<Fl_Preferences> prefs(new Fl_Preferences(Fl_Preferences::USER,
+            "MiniMIDI", "MiniMIDI"));
+    char* scheme;
+    prefs->get("scheme", scheme, "gtk+");
+    Fl::scheme(scheme);
 
-  int r, g, b;
-  prefs->get("bg_r", r, 192); prefs->get("bg_g", g, 192); prefs->get("bg_b", b, 192);
-  Fl::background(r, g, b);
-  prefs->get("bg2_r", r, 255); prefs->get("bg2_g", g, 255); prefs->get("bg2_b", b, 255);
-  Fl::background2(r, g, b);
-  prefs->get("fg_r", r, 0); prefs->get("fg_g", g, 0); prefs->get("fg_b", b, 0);
-  Fl::foreground(r, g, b);
+    int r, g, b;
+    prefs->get("bg_r", r, 192); prefs->get("bg_g", g, 192); prefs->get("bg_b", b, 192);
+    Fl::background(r, g, b);
+    prefs->get("bg2_r", r, 255); prefs->get("bg2_g", g, 255); prefs->get("bg2_b", b, 255);
+    Fl::background2(r, g, b);
+    prefs->get("fg_r", r, 0); prefs->get("fg_g", g, 0); prefs->get("fg_b", b, 0);
+    Fl::foreground(r, g, b);
 }
 
 int main(int argc, char** argv)
 {
-  loadPrefs();
+    loadPrefs();
 
-  MainWindow* win = new MainWindow();
-  win->end();
-  win->show(argc, argv);
-  return Fl::run();
+    MainWindow* win = new MainWindow();
+    win->end();
+    win->show(argc, argv);
+    return Fl::run();
 }

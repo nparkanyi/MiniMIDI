@@ -25,35 +25,35 @@ class Fl_Menu_Bar;
 
 class PlaybackControls : public Fl_Group {
 public:
-  PlaybackControls(int x, int y, Viewport *view);
-  virtual void resize(int x, int y, int w, int h);
+    PlaybackControls(int x, int y, Viewport *view);
+    virtual void resize(int x, int y, int w, int h);
 
 private:
-  Viewport* view;
+    Viewport* view;
 
-  static void cbPlay(Fl_Widget* w, void* v);
-  static void cbRwd(Fl_Widget* w, void* v);
-  static void cbFwd(Fl_Widget* w, void* v);
+    static void cbPlay(Fl_Widget* w, void* v);
+    static void cbRwd(Fl_Widget* w, void* v);
+    static void cbFwd(Fl_Widget* w, void* v);
 };
 
 
 class MainWindow : public Fl_Double_Window {
 public:
-  MainWindow();
-  void quit(); //closes all child windows before quitting
-  virtual void resize(int x, int y, int w, int h);
+    MainWindow();
+    void quit(); //closes all child windows before quitting
+    virtual void resize(int x, int y, int w, int h);
 
-  //v pointer to the MainWindow
-  static void cbAbout(Fl_Widget* w, void* v);
-  static void cbSettings(Fl_Widget* w, void* v);
-  static void cbQuit(Fl_Widget* w, void* v);
+    //v pointer to the MainWindow
+    static void cbAbout(Fl_Widget* w, void* v);
+    static void cbSettings(Fl_Widget* w, void* v);
+    static void cbQuit(Fl_Widget* w, void* v);
 
 private:
-  Fl_Menu_Bar* menu;
-  Viewport* view;
-  PlaybackControls* controls;
-  AboutDialog* about_dialog;
-  SettingsDialog* settings_dialog;
+    Fl_Menu_Bar* menu;
+    Viewport* view;
+    PlaybackControls* controls;
+    AboutDialog* about_dialog;
+    SettingsDialog* settings_dialog;
 };
 
 #endif
