@@ -4,6 +4,7 @@
 
 class Viewport;
 class Fl_Scrollbar;
+class Fl_Slider;
 class Event;
 
 class NoteEditor {
@@ -30,6 +31,8 @@ public:
     //returns the thickness of this note
     int getNoteThickness(int note_value) const;
 
+    static void cbSeeker(Fl_Widget* w, void* data);
+
 private:
     bool isBlackNote(int note_value) const;
     void drawNotes() const;
@@ -40,6 +43,7 @@ private:
     int x, y, w, h;
     Viewport* view;
     Fl_Scrollbar* scroll_vert;
+    Fl_Slider* seeker;
     int note_thickness;
     int ms_per_pixel;
 

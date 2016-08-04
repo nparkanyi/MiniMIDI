@@ -113,6 +113,7 @@ public:
 
     //current playback time
     unsigned long getTime() const;
+    bool isPlaying() const { return playing; }
     Synth* getSynth();
     void seek(unsigned long time);
     void pause();

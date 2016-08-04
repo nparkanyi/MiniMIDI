@@ -2,12 +2,14 @@
 #include <sstream>
 #include <Fl/fl_draw.H>
 #include <Fl/Fl_Scrollbar.H>
+#include <Fl/Fl_Slider.H>
 #include "NoteEditor.h"
 #include "Viewport.h"
 #include <Fl/fl_ask.H>
 
 #define BAROFFSET 300
 #define SCROLLWIDTH 20
+#define SEEKERHEIGHT 20
 
 NoteEditor::NoteEditor(int x, int y, int w, int h, Viewport* view) : x(x), y(y), w(w), h(h),
                        view(view), note_thickness(10), ms_per_pixel(10)
@@ -15,6 +17,10 @@ NoteEditor::NoteEditor(int x, int y, int w, int h, Viewport* view) : x(x), y(y),
     scroll_vert = new Fl_Scrollbar(x + w - SCROLLWIDTH - 2, y + 1, SCROLLWIDTH, h - 2);
     scroll_vert->value(40, 30, 0, 127);
     scroll_vert->linesize(2);
+
+    seeker = new Fl_Slider(x + 2, y + h - SEEKERHEIGHT, w - SCROLLWIDTH - 4, SEEKERHEIGHT);
+    seeker->type(FL_HOR_NICE_SLIDER);
+    seeker->callback(cbSeeker, view);
 }
 
 void NoteEditor::draw() const
@@ -43,6 +49,13 @@ void NoteEditor::draw() const
     fl_color(0, 50, 200);
     fl_line(x + BAROFFSET, y, x + BAROFFSET, y + h);
     scroll_vert->redraw();
+
+    //update seeker value and range as necessary
+    seeker->range(0.0, static_cast<double>(view->getMIDIData()->getTrack(0)->getDuration()));
+    if (view->getPlayback()->isPlaying()){
+        seeker->value(view->getPlayback()->getTime());
+    }
+    seeker->redraw();
     fl_pop_clip();
 }
 
@@ -143,6 +156,14 @@ int NoteEditor::getNoteThickness(int note_value) const
     } else {
         return note_thickness + 4;
     }
+}
+
+void NoteEditor::cbSeeker(Fl_Widget* w, void* v)
+{
+    Fl_Slider* seeker = static_cast<Fl_Slider*>(w);
+    Viewport* view = static_cast<Viewport*>(v);
+
+    view->getPlayback()->seek(static_cast<unsigned long>(seeker->value()));
 }
 
 bool NoteEditor::isBlackNote(int i) const
