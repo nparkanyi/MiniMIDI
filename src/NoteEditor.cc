@@ -1,3 +1,4 @@
+#include <memory>
 #include <iostream>
 #include <sstream>
 #include <Fl/fl_draw.H>
@@ -52,10 +53,9 @@ void NoteEditor::draw() const
 
     //update seeker value and range as necessary
     seeker->range(0.0, static_cast<double>(view->getMIDIData()->getTrack(0)->getDuration()));
-    if (view->getPlayback()->isPlaying()){
-        seeker->value(view->getPlayback()->getTime());
-    }
+    seeker->value(view->getPlayback()->getTime());
     seeker->redraw();
+
     fl_pop_clip();
 }
 

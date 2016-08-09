@@ -20,7 +20,7 @@
 #define DEFAULT_SF2 "soundfonts/GeneralUser_GS_SoftSynth_v1.44.sf2"
 #endif
 #ifndef DEFAULT_DRIVER
-#define DEFAULT_DRIVER "dsound"
+#define DEFAULT_DRIVER "pulseaudio"
 #endif
 
 #include <array>
