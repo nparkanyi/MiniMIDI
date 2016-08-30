@@ -59,7 +59,7 @@ void NoteEditor::draw() const
             fl_line(x, y + line_y, x + w, y + line_y);
             line_y += note_thickness + 4;
         }
-        drawNoteName(i, x + 4, y + line_y - 2);
+        drawNoteName(i, x + 4, y + line_y - 1);
         fl_color(150, 150, 150);
     }
 
