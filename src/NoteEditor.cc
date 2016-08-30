@@ -34,6 +34,7 @@ NoteEditor::NoteEditor(int x, int y, int w, int h, Viewport* view) : x(x), y(y),
     scroll_vert = new Fl_Scrollbar(x + w - SCROLLWIDTH - 2, y + 1, SCROLLWIDTH, h - 2);
     scroll_vert->value(40, 30, 0, 127);
     scroll_vert->linesize(2);
+    scroll_vert->callback(cbScroll, view);
 
     seeker = new Fl_Slider(x + 2, y + h - SEEKERHEIGHT, w - SCROLLWIDTH - 4, SEEKERHEIGHT);
     seeker->type(FL_HOR_NICE_SLIDER);
@@ -104,6 +105,7 @@ void NoteEditor::mouseDrag(int mouse_x, int mouse_y)
     long start_time = drag_note->getTime();
     if (time < start_time) time = 0;
     drag_note->setDuration(time - start_time);
+    view->redraw();
 }
 
 void NoteEditor::mouseRelease(int mouse_x, int mouse_y)
@@ -128,6 +130,7 @@ void NoteEditor::rightRelease(int mouse_x, int mouse_y)
     if (time > 0){
         view->getMIDIData()->getTrack(0)->removeNotesAt(time, value);
     }
+    view->redraw();
 }
 
 void NoteEditor::setThickness(int thickness)
@@ -180,6 +183,11 @@ void NoteEditor::cbSeeker(Fl_Widget* w, void* v)
     Viewport* view = static_cast<Viewport*>(v);
 
     view->getPlayback()->seek(static_cast<unsigned long>(seeker->value()));
+}
+
+void NoteEditor::cbScroll(Fl_Widget* w, void* v)
+{
+    static_cast<Viewport*>(v)->redraw();
 }
 
 bool NoteEditor::isBlackNote(int i) const

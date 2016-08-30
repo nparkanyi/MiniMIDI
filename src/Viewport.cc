@@ -193,6 +193,8 @@ void Viewport::cbEveryFrame(void* v)
 {
     Viewport* view = static_cast<Viewport*>(v);
     view->getPlayback()->everyFrame();
-    view->redraw();
+    if (view->getPlayback()->isPlaying()){
+        view->redraw();
+    }
     Fl::repeat_timeout(0.001, Viewport::cbEveryFrame, v);
 }

@@ -48,7 +48,9 @@ public:
     //returns the thickness of this note
     int getNoteThickness(int note_value) const;
 
+    //data should be set to view
     static void cbSeeker(Fl_Widget* w, void* data);
+    static void cbScroll(Fl_Widget* w, void* data);
 
 private:
     bool isBlackNote(int note_value) const;
