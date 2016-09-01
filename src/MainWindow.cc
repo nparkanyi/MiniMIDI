@@ -20,6 +20,7 @@
 #include <Fl/Fl_Button.H>
 #include <Fl/Fl_File_Chooser.H>
 #include "MainWindow.h"
+#include "MIDILoader.h"
 #include "notes_pixmap.h"
 
 #define RES_X 1024
@@ -158,6 +159,8 @@ void MainWindow::cbOpenMIDIFile(Fl_Widget* w, void* v)
     if (mw->midi_chooser->value() != NULL){
         try {
             //load midi file
+            MIDILoader loader(std::string(mw->midi_chooser->value()),
+                              mw->view->getMIDIData());
         } catch (std::exception &e){
             fl_alert(e.what());
         }

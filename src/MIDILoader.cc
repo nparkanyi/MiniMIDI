@@ -33,6 +33,11 @@ MIDILoader::MIDILoader(std::string filename, MIDIData* midi_data)
     }
 }
 
+MIDILoader::~MIDILoader()
+{
+    MIDIFile_delete(&midi_file);
+}
+
 void MIDILoader::load()
 {
     for (int i = 0; i < midi_file.header.num_tracks; i++){
