@@ -18,6 +18,7 @@
 #include <Fl/Fl_Pixmap.H>
 #include <Fl/Fl_Image.H>
 #include <Fl/Fl_Button.H>
+#include <Fl/Fl_File_Chooser.H>
 #include "MainWindow.h"
 #include "notes_pixmap.h"
 
@@ -96,6 +97,7 @@ MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
     begin();
 
     Fl_Menu_Item items[] = { { "&File", 0, 0, 0, FL_SUBMENU},
+                           { "&Open MIDI", FL_COMMAND + 'o', cbOpenMIDIFile, this},
                            { "&Quit", FL_COMMAND + 'q', cbQuit, this},
                            { 0 },
                            { "&Edit", 0, 0, 0, FL_SUBMENU},
@@ -111,6 +113,10 @@ MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
 
     controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50, view);
     controls->end();
+
+    midi_chooser = new Fl_File_Chooser("./", "MIDI Files (*.mid)", Fl_File_Chooser::SINGLE,
+                                       "Choose MIDI file");
+    midi_chooser->preview(0);
 }
 
 void MainWindow::quit()
@@ -140,6 +146,23 @@ void MainWindow::cbSettings(Fl_Widget* w, void* v)
     static_cast<MainWindow*>(v)->settings_dialog->show();
 }
 
+
+void MainWindow::cbOpenMIDIFile(Fl_Widget* w, void* v)
+{
+    MainWindow* mw = static_cast<MainWindow*>(v);
+
+    mw->midi_chooser->show();
+    while (mw->midi_chooser->shown()){
+        Fl::wait();
+    }
+    if (mw->midi_chooser->value() != NULL){
+        try {
+            //load midi file
+        } catch (std::exception &e){
+            fl_alert(e.what());
+        }
+    }
+}
 
 void MainWindow::cbQuit(Fl_Widget* w, void* v)
 {

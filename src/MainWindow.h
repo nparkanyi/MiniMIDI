@@ -22,6 +22,7 @@
 #include "SettingsDialog.h"
 
 class Fl_Menu_Bar;
+class Fl_File_Chooser;
 
 class PlaybackControls : public Fl_Group {
 public:
@@ -46,6 +47,7 @@ public:
     //v pointer to the MainWindow
     static void cbAbout(Fl_Widget* w, void* v);
     static void cbSettings(Fl_Widget* w, void* v);
+    static void cbOpenMIDIFile(Fl_Widget* w, void* v);
     static void cbQuit(Fl_Widget* w, void* v);
 
 private:
@@ -54,6 +56,7 @@ private:
     PlaybackControls* controls;
     AboutDialog* about_dialog;
     SettingsDialog* settings_dialog;
+    Fl_File_Chooser* midi_chooser;
 };
 
 #endif

@@ -4,8 +4,8 @@ FLSTATIC = `fltk-config --ldstaticflags`
 FLUID = -lfluidsynth
 
 
-MiniMIDI: main.cc MainWindow.o AboutDialog.o SettingsDialog.o Viewport.o MIDI.o Synth.o NoteEditor.o libmidi.o
-	${CXX} main.cc  $(FLAGS) MainWindow.o AboutDialog.o SettingsDialog.o Viewport.o MIDI.o Synth.o NoteEditor.o libmidi.o -o MiniMIDI $(FLFLAGS) $(FLSTATIC) $(FLUID)
+MiniMIDI: main.cc MainWindow.o AboutDialog.o SettingsDialog.o Viewport.o MIDI.o Synth.o NoteEditor.o libmidi.o MIDILoader.o
+	${CXX} main.cc  $(FLAGS) MainWindow.o AboutDialog.o SettingsDialog.o Viewport.o MIDI.o Synth.o NoteEditor.o libmidi.o MIDILoader.o -o MiniMIDI $(FLFLAGS) $(FLSTATIC) $(FLUID)
 
 MainWindow.o: MainWindow.h MainWindow.cc
 	${CXX} MainWindow.cc $(FLAGS) -c $(FLFLAGS)
@@ -28,5 +28,8 @@ Synth.o: Synth.h Synth.cc
 NoteEditor.o: NoteEditor.h NoteEditor.cc
 	${CXX} NoteEditor.cc $(FLAGS) -c $(FLFLAGS)
 
-libmidi.o: libmidi/midi.h libmidi/midi.c
-	${CC} libmidi/midi.c -I./libmidi -c -o libmidi.o -std=c99 -lfluidsynth
+libmidi.o: libmidi/libmidi.h libmidi/libmidi.c
+	${CXX} libmidi/libmidi.c -I./libmidi -c -o libmidi.o
+
+MIDILoader.o: MIDILoader.h MIDILoader.cc
+	${CXX} MIDILoader.cc $(FLAGS) -c
