@@ -15,6 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <sstream>
+#include <memory>
 #include "MIDI.h"
 #include "MIDILoader.h"
 #include "libmidi/libmidi.h"
@@ -46,7 +47,25 @@ void MIDILoader::load()
     }
 }
 
+void deleteLibmidiTrack(MIDITrack* trk)
+{
+    MIDITrack_delete_events(trk);
+    delete trk;
+}
+
 void MIDILoader::loadTrack(Track* midi_data_track)
 {
-    return;
+    float conversion = MIDIHeader_getTempoConversion(&midi_file.header, 500000);
+    MIDITrack track_;
+    std::shared_ptr<MIDITrack> track(&track_, MIDITrack_delete_events);
+
+    int r = MIDITrack_load(track.get(), midi_file.file);
+    switch (r){
+        case MIDIError::FILE_INVALID:
+            throw LibmidiError(std::string("Invalid track data!"));
+        case MIDIError::FILE_IO_ERROR:
+            throw LibmidiError(std::string("File IO error!"));
+        case MIDIError::MEMORY_ERROR:
+            throw LibmidiError(std::string("Failed to allocate memory!"));
+    }
 }
