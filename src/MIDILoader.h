@@ -20,12 +20,12 @@
 #include <exception>
 #include "libmidi/libmidi.h"
 
-class MIDIData;
+class Viewport;
 class Track;
 
 class MIDILoader {
 public:
-    MIDILoader(std::string filename, MIDIData* midi_data);
+    MIDILoader(std::string filename, Viewport* view);
     ~MIDILoader();
 
     void load();
@@ -43,7 +43,7 @@ private:
     void loadTrack(Track* midi_data_track);
 
     std::string filename;
-    MIDIData* midi_data;
+    Viewport* view;
     MIDIFile midi_file;
     MIDITrack track;
 

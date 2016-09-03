@@ -69,7 +69,14 @@ void NoteEditor::draw() const
     scroll_vert->redraw();
 
     //update seeker value and range as necessary
-    seeker->range(0.0, static_cast<double>(view->getMIDIData()->getTrack(0)->getDuration()));
+    int dur = 0;
+    int num_tracks = view->getMIDIData()->numTracks();
+    for (int i = 0; i < num_tracks; i++){
+        if (view->getMIDIData()->getTrack(i)->getDuration() > dur){
+            dur = view->getMIDIData()->getTrack(i)->getDuration();
+        }
+    }
+    seeker->range(0.0, static_cast<double>(dur));
     seeker->value(view->getPlayback()->getTime());
     seeker->redraw();
 

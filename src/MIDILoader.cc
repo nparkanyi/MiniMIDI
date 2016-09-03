@@ -16,12 +16,13 @@
  */
 #include <sstream>
 #include <memory>
+#include "Viewport.h"
 #include "MIDI.h"
 #include "MIDILoader.h"
 #include "libmidi/libmidi.h"
 
-MIDILoader::MIDILoader(std::string filename, MIDIData* midi_data)
-                      : filename(filename), midi_data(midi_data)
+MIDILoader::MIDILoader(std::string filename, Viewport* view)
+                      : filename(filename), view(view)
 {
     int r = MIDIFile_load(&midi_file, filename.c_str());
     switch (r) {
@@ -42,8 +43,8 @@ MIDILoader::~MIDILoader()
 void MIDILoader::load()
 {
     for (int i = 0; i < midi_file.header.num_tracks; i++){
-        midi_data->newTrack();
-        loadTrack(midi_data->getTrack(i));
+        view->getMIDIData()->newTrack();
+        loadTrack(view->getMIDIData()->getTrack(i));
     }
 }
 
@@ -67,5 +68,43 @@ void MIDILoader::loadTrack(Track* midi_data_track)
             throw LibmidiError(std::string("File IO error!"));
         case MIDIError::MEMORY_ERROR:
             throw LibmidiError(std::string("Failed to allocate memory!"));
+    }
+
+    MIDIEventIterator iter = MIDIEventList_get_start_iter(track->list);
+    MIDIEvent* ev = MIDIEventList_get_event(iter);
+    unsigned long time = 0;
+    std::vector<NoteOn*> note_ons; //store NoteOns so we can update their durations
+                                   // when NoteOff is encountered.
+
+    while (ev->type != META_END_TRACK){
+        time += ev->delta_time * conversion;
+        //noteOn with non-zero velocity
+        if (ev->type == EV_NOTE_ON && static_cast<MIDIChannelEventData*>(ev->data)->param2){
+            NoteOn* tmp = new NoteOn(view, time,
+                                     static_cast<MIDIChannelEventData*>(ev->data)->param1,
+                                     static_cast<MIDIChannelEventData*>(ev->data)->param2,
+                                     0);
+            note_ons.push_back(tmp);
+            midi_data_track->addEvent(std::shared_ptr<Event>(tmp));
+        //NoteOffs
+        } else if (ev->type == EV_NOTE_ON || ev->type == EV_NOTE_OFF){
+            short value = static_cast<MIDIChannelEventData*>(ev->data)->param1;
+            midi_data_track->addEvent(
+                    std::shared_ptr<Event>(new NoteOff(view, time, value)));
+
+            int size = note_ons.size();
+            for (int i = 0; i < size; i++){
+                if (note_ons[i]->getValue() == value){
+                    note_ons[i]->setDuration(time - note_ons[i]->getTime());
+                    note_ons.erase(note_ons.begin() + i);
+                    break;
+                }
+            }
+        } else if (ev->type == META_TEMPO_CHANGE){
+            conversion = MIDIHeader_getTempoConversion(&midi_file.header, *(uint32_t*)(ev->data));
+        }
+
+        iter = MIDIEventList_next_event(iter);
+        ev = MIDIEventList_get_event(iter);
     }
 }

@@ -160,7 +160,7 @@ void MainWindow::cbOpenMIDIFile(Fl_Widget* w, void* v)
         try {
             //load midi file
             MIDILoader loader(std::string(mw->midi_chooser->value()),
-                              mw->view->getMIDIData());
+                              mw->view);
             loader.load();
         } catch (std::exception &e){
             fl_alert(e.what());
