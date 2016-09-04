@@ -57,6 +57,7 @@ private:
     AboutDialog* about_dialog;
     SettingsDialog* settings_dialog;
     Fl_File_Chooser* midi_chooser;
+    std::string title;
 };
 
 #endif

@@ -141,6 +141,7 @@ public:
     Track* getTrack(int index);
     void newTrack();
     void fillTrack();
+    void clear();
 
 private:
     Viewport* view;

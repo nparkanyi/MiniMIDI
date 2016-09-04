@@ -313,3 +313,8 @@ void MIDIData::newTrack()
     tracks.push_back(Track());
     tracks[tracks.size() - 1].setColour(200, 50, 50);
 }
+
+void MIDIData::clear()
+{
+    tracks.clear();
+}

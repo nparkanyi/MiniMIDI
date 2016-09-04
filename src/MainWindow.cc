@@ -158,10 +158,15 @@ void MainWindow::cbOpenMIDIFile(Fl_Widget* w, void* v)
     }
     if (mw->midi_chooser->value() != NULL){
         try {
+            mw->view->getMIDIData()->clear();
+            mw->view->getPlayback()->seek(0);
             //load midi file
             MIDILoader loader(std::string(mw->midi_chooser->value()),
                               mw->view);
             loader.load();
+
+            mw->title = "MiniMIDI -- " + std::string(mw->midi_chooser->value());
+            mw->label(mw->title.c_str());
         } catch (std::exception &e){
             fl_alert(e.what());
         }
