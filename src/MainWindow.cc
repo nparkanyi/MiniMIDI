@@ -166,6 +166,7 @@ void MainWindow::cbOpenMIDIFile(Fl_Widget* w, void* v)
             fl_alert(e.what());
         }
     }
+    mw->view->redraw();
 }
 
 void MainWindow::cbQuit(Fl_Widget* w, void* v)
