@@ -19,26 +19,32 @@
 #include <Fl/Fl_Image.H>
 #include <Fl/Fl_Button.H>
 #include <Fl/Fl_File_Chooser.H>
+#include <Fl/fl_draw.H>
 #include "MainWindow.h"
 #include "MIDILoader.h"
 #include "notes_pixmap.h"
 
 #define RES_X 1024
-#define RES_Y 600
+#define RES_Y 640
 
 
 PlaybackControls::PlaybackControls(int x, int y, Viewport* view) :
-                                    Fl_Group(x, y, 140, 40), view(view)
+                                    Fl_Group(x, y, 140, 80), view(view)
 {
     resizable(NULL);
-    Fl_Button* rwd = new Fl_Button(x, y, 40, 40, "@<<");
+    time_label = new Fl_Box(x + 40, y, 60, 20, "0:0");
+    time_label->labelfont(FL_COURIER);
+    time_label->labelsize(20);
+
+    Fl_Button* rwd = new Fl_Button(x, y + 30, 40, 40, "@<<");
     rwd->callback(cbRwd, view);
 
-    Fl_Button* play = new Fl_Button(x + 50, y, 40, 40, "@>");
+    Fl_Button* play = new Fl_Button(x + 50, y + 30, 40, 40, "@>");
     play->callback(cbPlay, view);
 
-    Fl_Button* fwd = new Fl_Button(x + 100, y, 40, 40, "@>>");
+    Fl_Button* fwd = new Fl_Button(x + 100, y + 30, 40, 40, "@>>");
     fwd->callback(cbRwd, view);
+    Fl::add_timeout(0.001, cbEveryFrame, this);
 }
 
 void PlaybackControls::resize(int x, int y, int w, int h)
@@ -46,7 +52,7 @@ void PlaybackControls::resize(int x, int y, int w, int h)
     //ignore w and h, prevent widget from being resized
     //otherwise, it gets shrunk with the window and the buttons
     //fall outside the dimensions, so the user can't click them
-    Fl_Group::resize(x, y, 140, 40);
+    Fl_Group::resize(x, y, 140, 80);
 }
 
 void PlaybackControls::cbPlay(Fl_Widget* w, void* v)
@@ -78,6 +84,15 @@ void PlaybackControls::cbFwd(Fl_Widget* w, void* v)
 {
 }
 
+void PlaybackControls::cbEveryFrame(void* v)
+{
+    PlaybackControls* plybk = static_cast<PlaybackControls*>(v);
+    if (plybk->view->getPlayback()->isPlaying()){
+        plybk->time_text = plybk->view->getPlayback()->getTimeString();
+        plybk->time_label->label(plybk->time_text.c_str());
+    }
+    Fl::repeat_timeout(0.001, PlaybackControls::cbEveryFrame, v);
+}
 
 MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
 {
@@ -88,7 +103,7 @@ MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
     Fl_RGB_Image icon_image(&px);
     icon(&icon_image);
 
-    view = new Viewport(10, 40, RES_X - 20, RES_Y - 100);
+    view = new Viewport(10, 40, RES_X - 20, RES_Y - 130);
     resizable(view);
 
     about_dialog = new AboutDialog();
@@ -112,7 +127,7 @@ MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
     menu = new Fl_Menu_Bar(0, 0, RES_X, 30);
     menu->copy(items);
 
-    controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 50, view);
+    controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 80, view);
     controls->end();
 
     midi_chooser = new Fl_File_Chooser("./", "MIDI Files (*.mid)", Fl_File_Chooser::SINGLE,

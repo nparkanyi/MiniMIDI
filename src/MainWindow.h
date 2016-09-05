@@ -16,11 +16,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <string>
 #include <Fl/Fl_Double_Window.H>
 #include "Viewport.h"
 #include "AboutDialog.h"
 #include "SettingsDialog.h"
 
+class Fl_Box;
 class Fl_Menu_Bar;
 class Fl_File_Chooser;
 
@@ -31,10 +33,13 @@ public:
 
 private:
     Viewport* view;
+    std::string time_text;
+    Fl_Box* time_label;
 
     static void cbPlay(Fl_Widget* w, void* v);
     static void cbRwd(Fl_Widget* w, void* v);
     static void cbFwd(Fl_Widget* w, void* v);
+    static void cbEveryFrame(void* v);
 };
 
 

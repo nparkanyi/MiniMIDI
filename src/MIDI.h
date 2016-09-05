@@ -122,6 +122,7 @@ public:
     void updateIndices();
     //method called every frame, this actually plays notes
     void everyFrame();
+    std::string getTimeString() const;
 
 private:
     Viewport* view;

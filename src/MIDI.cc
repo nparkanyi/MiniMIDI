@@ -15,6 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <iostream>
+#include <sstream>
 #include <Fl/fl_draw.H>
 #include "MIDI.h"
 #include "Viewport.h"
@@ -278,6 +279,14 @@ void Playback::everyFrame()
             }
         }
     }
+}
+
+std::string Playback::getTimeString() const
+{
+    unsigned long time = getTime();
+    std::ostringstream tstr;
+    tstr << time / 60000 << ":" << (time % 60000) / 1000;
+    return tstr.str();
 }
 
 MIDIData::MIDIData(Viewport* view) : view(view), filename("")
