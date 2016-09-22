@@ -16,6 +16,7 @@
  */
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include <Fl/fl_draw.H>
 #include "MIDI.h"
 #include "Viewport.h"
@@ -285,7 +286,8 @@ std::string Playback::getTimeString() const
 {
     unsigned long time = getTime();
     std::ostringstream tstr;
-    tstr << time / 60000 << ":" << (time % 60000) / 1000;
+    tstr << time / 60000 << ":" << std::setfill('0') << std::setw(2)
+        << (time % 60000) / 1000;
     return tstr.str();
 }
 
