@@ -184,7 +184,7 @@ void Track::setColour(char r, char g, char b)
 {
     this->r = r;
     this->g = g;
-    this->b = g;
+    this->b = b;
 }
 
 void Track::getColour(char &r, char &g, char &b) const
@@ -321,8 +321,23 @@ Track* MIDIData::getTrack(int index)
 
 void MIDIData::newTrack()
 {
+	//red, blue, light green, orange, cyan, dark green, yellow, pink
+	int r_bank[] = {241, 15, 15, 255, 15, 15, 255, 241};
+	int g_bank[] = {25, 91, 255, 78, 255, 147, 255, 25};
+	int b_bank[] = {10, 255, 15, 15, 255, 15, 15, 196};
+	static int r = 0;
+	static int g = 0;
+	static int b = 0;
+	
+
+	
     tracks.push_back(Track());
-    tracks[tracks.size() - 1].setColour(200, 50, 50);
+    tracks[tracks.size() - 1].setColour(r_bank[r], g_bank[g], b_bank[b]);
+
+	//generate new colour for next track
+	r = (r + 1) % 8;
+	g = (g + 1) % 8;
+	b = (b + 1) % 8;
 }
 
 void MIDIData::clear()
