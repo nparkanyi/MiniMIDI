@@ -86,7 +86,7 @@ void SettingsDialog::cbChangeScheme(Fl_Widget* w, void *v)
             Fl::scheme("gleam");
             break;
         case 3:
-            Fl::scheme("standard");
+            Fl::scheme("none");
             break;
     }
     Fl::redraw();
@@ -126,8 +126,13 @@ void SettingsDialog::cbClose(Fl_Widget* w, void* v)
     std::shared_ptr<Fl_Preferences> prefs(new Fl_Preferences(Fl_Preferences::USER,
                                                              "MiniMIDI", "MiniMIDI"));
     SettingsDialog* diag = static_cast<SettingsDialog*>(v);
+    const char* widget_scheme = Fl::scheme();
 
-    prefs->set("scheme", Fl::scheme());
+    if (widget_scheme){
+        prefs->set("scheme", widget_scheme);
+    } else {
+        prefs->set("scheme", "none");
+    }
 
     unsigned char r, g, b;
     Fl::get_color(FL_BACKGROUND_COLOR, r, g, b);
@@ -177,14 +182,14 @@ int SettingsDialog::schemeIndex()
 {
     const char* scheme = Fl::scheme();
 
-    if (std::strcmp("gtk+", scheme) == 0){
+    if (!scheme){
+        return 3;
+    } else if (std::strcmp("gtk+", scheme) == 0){
         return 0;
     } else if (std::strcmp("plastic", scheme) == 0){
         return 1;
     } else if (std::strcmp("gleam", scheme) == 0){
         return 2;
-    } else if (std::strcmp("standard", scheme) == 0){
-        return 3;
     } else {
         return 0;
     }
