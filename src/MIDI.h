@@ -26,12 +26,13 @@
 class Viewport;
 class Playback;
 class NoteEditor;
+class Track;
 class MIDIData;
 
 class Event {
 public:
-    Event(Viewport* view, std::string type, unsigned long time)
-          : view(view), type(type), time(time) {}
+    Event(Viewport* view, Track* track, std::string type, unsigned long time)
+          : view(view), track(track), type(type), time(time) {}
     virtual ~Event(){}
 
     std::string getType() const { return type; }
@@ -45,6 +46,7 @@ public:
 
 protected:
     Viewport* view;
+    Track* track;
 
 private:
     std::string type;
@@ -54,7 +56,7 @@ private:
 
 class NoteOn : public Event {
 public:
-    NoteOn(Viewport* view, unsigned long time, short value,
+    NoteOn(Viewport* view, Track* track, unsigned long time, short value,
          short velocity, int duration);
 
     short getValue() const;
@@ -72,7 +74,7 @@ private:
 
 class NoteOff : public Event {
 public:
-    NoteOff(Viewport* view, unsigned long time, short value);
+    NoteOff(Viewport* view, Track *track, unsigned long time, short value);
 
     short getValue() const;
     virtual void run();

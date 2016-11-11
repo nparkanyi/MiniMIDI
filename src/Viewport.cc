@@ -29,11 +29,15 @@ Keyboard::Keyboard(int x, int y, int w, int h, Viewport* view) : x(x), y(y), w(w
     key_states.fill(false);
 }
 
-void Keyboard::setKey(short key, bool value)
+void Keyboard::setKey(short key, bool value, int r, int g, int b)
 {
     //keyboard contains midi values 21 through 108
     if (key >= 21 && key <= 108){
         key_states[key - 21] = value;
+        int idx = (key - 21) * 3;
+        key_colours[idx] = r;
+        key_colours[idx + 1] = g;
+        key_colours[idx + 2] = b;
     }
 }
 
@@ -55,7 +59,7 @@ void Keyboard::draw() const
     fl_rectf(x, y, w, h, 100, 100, 100);
     for (int i = 0; i < 88; i++){
         if (key_states[i])
-            colour = fl_rgb_color(200, 30, 30);
+            colour = fl_rgb_color(key_colours[i*3], key_colours[i*3+1], key_colours[i*3+2]);
         else
             colour = fl_rgb_color(255, 255, 255);
         if (i % 12 != 1 && i % 12 != 6 && i % 12 != 11 && i % 12 != 4
@@ -73,7 +77,7 @@ void Keyboard::draw() const
     whites = 0;
     for (int i = 0; i < 88; i++){
         key_width = this->key_width;
-        colour = fl_rgb_color(200, 30, 30);
+        colour = fl_rgb_color(key_colours[i*3], key_colours[i*3+1], key_colours[i*3+2]);
         if (i % 12 == 1 || i % 12 == 6 || i % 12 == 11){ //Bb, Eb, Ab
             fl_rectf(x + offset - key_width / 3, y, black_width, black_height,
                      0, 0, 0);

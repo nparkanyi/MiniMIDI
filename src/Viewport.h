@@ -34,7 +34,7 @@ class Keyboard {
 public:
     Keyboard(int x, int y, int w, int h, Viewport* view);
 
-    void setKey(short key, bool value);
+    void setKey(short key, bool value, int r, int g, int b);
     //releases all keys
     void clear();
     void draw() const;
@@ -44,6 +44,7 @@ public:
 private:
     Viewport* view;
     std::array<bool, 88> key_states;
+    std::array<int, 264> key_colours; //stored as { r, g, b, r, g, b, ...}
     int x, y, w, h;
     int key_width;
     int n; //due to truncation of key_width, there is a gap at the right of keyboard,

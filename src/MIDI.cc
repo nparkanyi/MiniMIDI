@@ -21,9 +21,9 @@
 #include "MIDI.h"
 #include "Viewport.h"
 
-NoteOn::NoteOn(Viewport* view, unsigned long time, short value,
+NoteOn::NoteOn(Viewport* view, Track* track, unsigned long time, short value,
            short velocity, int duration)
-           : Event(view, "NoteOn", time), value(value), velocity(velocity),
+           : Event(view, track, "NoteOn", time), value(value), velocity(velocity),
              duration(duration)
 {}
 
@@ -44,8 +44,10 @@ void NoteOn::setDuration(int duration)
 
 void NoteOn::run()
 {
+    char r, g, b;
+    track->getColour(r, g, b);
     view->getPlayback()->getSynth()->noteOn(value, velocity);
-    view->getKeyboard()->setKey(value, true);
+    view->getKeyboard()->setKey(value, true, r, g, b);
     view->redraw();
 }
 
@@ -60,8 +62,8 @@ void NoteOn::draw()
     fl_rectf(x, y + 1, w, h - 1);
 }
 
-NoteOff::NoteOff(Viewport* view, unsigned long time, short value)
-                 : Event(view, "NoteOff", time), value(value)
+NoteOff::NoteOff(Viewport* view, Track* track, unsigned long time, short value)
+                 : Event(view, track, "NoteOff", time), value(value)
 {}
 
 short NoteOff::getValue() const
@@ -72,7 +74,7 @@ short NoteOff::getValue() const
 void NoteOff::run()
 {
     view->getPlayback()->getSynth()->noteOff(value);
-    view->getKeyboard()->setKey(value, false);
+    view->getKeyboard()->setKey(value, false, 0, 0, 0);
     view->redraw();
 }
 
@@ -296,17 +298,6 @@ MIDIData::MIDIData(Viewport* view) : view(view), filename("")
 
 void MIDIData::fillTrack()
 {
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 0, 60, 100, 500)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 500, 60)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 501, 59, 100, 1500)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 2001, 59)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 2500, 57, 100, 3000)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 3000, 30, 100, 3000)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOn(view, 3000, 100, 100, 3000)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 5500, 57)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 6000, 100)));
-    tracks[0].addEvent(std::shared_ptr<Event>(new NoteOff(view, 6000, 30)));
-    tracks[0].setColour(200, 0, 50);
 }
 
 int MIDIData::numTracks() const
@@ -328,9 +319,9 @@ void MIDIData::newTrack()
 	static int r = 0;
 	static int g = 0;
 	static int b = 0;
-	
 
-	
+
+
     tracks.push_back(Track());
     tracks[tracks.size() - 1].setColour(r_bank[r], g_bank[g], b_bank[b]);
 
