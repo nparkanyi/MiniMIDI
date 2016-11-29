@@ -47,6 +47,7 @@ SettingsDialog::SettingsDialog(Viewport* view) : Fl_Window(RESX, RESY), view(vie
                          { "Medium", 0, 0, 0},
                          { "Dark", 0, 0, 0},
                          { "UNIX Wizard", 0, 0, 0},
+			 { "XP", 0, 0, 0},
                          { 0 }};
     Fl_Choice* colour_choice = new Fl_Choice(410, 10, 100, 30, "Colour Scheme:");
     colour_choice->copy(colours);
@@ -100,7 +101,7 @@ void SettingsDialog::cbChangeColour(Fl_Widget* w, void* v)
         case 0: //Light
             Fl::background(242, 241, 240);
             Fl::background2(255, 255, 255);
-            Fl::foreground(60, 60, 60);
+            Fl::foreground(0, 0, 0);
             break;
         case 1: //Medium
             Fl::background(192, 192, 192);
@@ -117,6 +118,11 @@ void SettingsDialog::cbChangeColour(Fl_Widget* w, void* v)
             Fl::background2(30, 30, 30);
             Fl::foreground(0, 255, 0);
             break;
+	case 4: //XP
+	    Fl::background(235, 234, 217);
+	    Fl::background2(255, 255, 255);
+	    Fl::foreground(0, 0, 0);
+	    break;
     }
     Fl::redraw();
 }
@@ -211,9 +217,12 @@ int SettingsDialog::colourIndex()
         case 74: //Dark
             return 2;
             break;
-        default: //UNIX Wizard
+        case 0: //UNIX Wizard
             return 3;
             break;
+	default: //XP
+	    return 4;
+	    break;
     }
 }
 
