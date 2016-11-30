@@ -18,8 +18,8 @@
 #include <Fl/Fl_Pixmap.H>
 #include <Fl/Fl_Image.H>
 #include <Fl/Fl_Button.H>
-#include <Fl/Fl_File_Chooser.H>
 #include <Fl/fl_draw.H>
+#include <Fl/fl_ask.H>
 #include "MainWindow.h"
 #include "MIDILoader.h"
 #include "notes_pixmap.h"
@@ -130,9 +130,9 @@ MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
     controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 80, view);
     controls->end();
 
-    midi_chooser = new Fl_File_Chooser("./", "MIDI Files (*.mid)", Fl_File_Chooser::SINGLE,
-                                       "Choose MIDI file");
-    midi_chooser->preview(0);
+    midi_chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
+    midi_chooser.title("Choose MIDI file");
+    midi_chooser.filter("MIDI Files\t*.mid");
 }
 
 void MainWindow::quit()
@@ -167,24 +167,25 @@ void MainWindow::cbOpenMIDIFile(Fl_Widget* w, void* v)
 {
     MainWindow* mw = static_cast<MainWindow*>(v);
 
-    mw->midi_chooser->show();
-    while (mw->midi_chooser->shown()){
-        Fl::wait();
+    switch (mw->midi_chooser.show()){
+        case -1: 
+            fl_alert(mw->midi_chooser.errmsg());
+	    break;
+	case 1: //user cancelled
+	    return;
     }
-    if (mw->midi_chooser->value() != NULL){
-        try {
-            mw->view->getMIDIData()->clear();
-            mw->view->getPlayback()->seek(0);
-            //load midi file
-            MIDILoader loader(std::string(mw->midi_chooser->value()),
-                              mw->view);
-            loader.load();
+    try {
+        mw->view->getMIDIData()->clear();
+        mw->view->getPlayback()->seek(0);
+        //load midi file
+        MIDILoader loader(std::string(mw->midi_chooser.filename()),
+                          mw->view);
+        loader.load();
 
-            mw->title = "MiniMIDI -- " + std::string(mw->midi_chooser->value());
-            mw->label(mw->title.c_str());
-        } catch (std::exception &e){
-            fl_alert(e.what());
-        }
+        mw->title = "MiniMIDI -- " + std::string(mw->midi_chooser.filename());
+        mw->label(mw->title.c_str());
+    } catch (std::exception &e){
+        fl_alert(e.what());
     }
     mw->view->redraw();
 }

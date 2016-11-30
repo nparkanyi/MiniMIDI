@@ -29,15 +29,18 @@ void Synth::load(std::string driver, std::string sf_file)
     settings.reset(new_fluid_settings(), delete_fluid_settings);
     synth.reset(new_fluid_synth(settings.get()), delete_fluid_synth);
     if (!synth){
+	this->sf_file = std::string("none");
         throw FluidInitFail();
     }
     fluid_settings_setstr(settings.get(), "audio.driver", driver.c_str());
     adriver.reset(new_fluid_audio_driver(settings.get(), synth.get()), delete_fluid_audio_driver);
     if (!adriver){
+	this->sf_file = std::string("none");
         throw FluidDriverFail();
     }
     sf_handle = fluid_synth_sfload(synth.get(), sf_file.c_str(), 1);
     if (sf_handle == FLUID_FAILED){
+	this->sf_file = std::string("none");
         throw FluidSFFail();
     }
 

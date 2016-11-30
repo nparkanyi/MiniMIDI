@@ -20,7 +20,7 @@
 #include <Fl/Fl_Window.H>
 #include <Fl/Fl_Choice.H>
 #include <Fl/Fl_Box.H>
-#include <Fl/Fl_File_Chooser.H>
+#include <Fl/Fl_Native_File_Chooser.H>
 
 class Viewport;
 
@@ -43,7 +43,7 @@ private:
     Viewport* view;
     Fl_Box* sf2_filename;
     std::string file;
-    Fl_File_Chooser* chooser;
+    Fl_Native_File_Chooser chooser;
 };
 
 #endif /* SETTINGSDIALOG_H */

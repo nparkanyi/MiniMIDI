@@ -66,10 +66,9 @@ SettingsDialog::SettingsDialog(Viewport* view) : Fl_Window(RESX, RESY), view(vie
     open_chooser->callback(cbFileChooser, this);
     open_chooser->label("Choose");
 
-    chooser = new Fl_File_Chooser("./", "SF2 Files (*.sf2)",
-                                  Fl_File_Chooser::SINGLE,
-                                  "Choose soundfont");
-    chooser->preview(0);
+    chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
+    chooser.filter("SF2 Files\t*.sf2");
+    chooser.title("Choose soundfont");
 }
 
 void SettingsDialog::cbChangeScheme(Fl_Widget* w, void *v)
@@ -170,18 +169,19 @@ void SettingsDialog::cbFileChooser(Fl_Widget* w, void* v)
         driver = std::string(DEFAULT_DRIVER);
     }
 
-    diag->chooser->show();
-    while (diag->chooser->shown()){
-        Fl::wait();
+    switch(diag->chooser.show()){
+        case -1:
+	    fl_alert(diag->chooser.errmsg());
+	    break;
+	case 1:
+	    return; //user cancelled
     }
-    if (diag->chooser->value() != NULL){
-        try {
-            synth->reload(driver, std::string(diag->chooser->value()));
-        } catch (std::exception &e){
-            fl_alert(e.what());
-        }
-        diag->updateSF2Filename();
+    try {
+        synth->reload(driver, std::string(diag->chooser.filename()));
+    } catch (std::exception &e){
+        fl_alert(e.what());
     }
+    diag->updateSF2Filename();
 }
 
 int SettingsDialog::schemeIndex()

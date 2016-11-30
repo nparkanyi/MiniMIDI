@@ -18,13 +18,13 @@
  */
 #include <string>
 #include <Fl/Fl_Double_Window.H>
+#include <Fl/Fl_Native_File_Chooser.H>
 #include "Viewport.h"
 #include "AboutDialog.h"
 #include "SettingsDialog.h"
 
 class Fl_Box;
 class Fl_Menu_Bar;
-class Fl_File_Chooser;
 
 class PlaybackControls : public Fl_Group {
 public:
@@ -61,7 +61,7 @@ private:
     PlaybackControls* controls;
     AboutDialog* about_dialog;
     SettingsDialog* settings_dialog;
-    Fl_File_Chooser* midi_chooser;
+    Fl_Native_File_Chooser midi_chooser; //statically alloc'd since it's not a widget
     std::string title;
 };
 
