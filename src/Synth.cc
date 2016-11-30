@@ -67,19 +67,26 @@ std::string Synth::getSF()
     return sf_file;
 }
 
-void Synth::noteOn(short value, int velocity)
+void Synth::noteOn(short channel, short value, int velocity)
 {
-    fluid_synth_noteon(synth.get(), 0, value, velocity);
+    fluid_synth_noteon(synth.get(), channel, value, velocity);
 }
 
-void Synth::noteOff(short value)
+void Synth::noteOff(short channel, short value)
 {
-    fluid_synth_noteoff(synth.get(), 0, value);
+    fluid_synth_noteoff(synth.get(), channel, value);
+}
+
+void Synth::programChange(short channel, short voice)
+{
+    fluid_synth_program_change(synth.get(), channel, voice);
 }
 
 void Synth::clear()
 {
     for (int i = 0; i <= 127; i++){
-        fluid_synth_noteoff(synth.get(), 0, i);
+        for (int j = 0; j < 16; j++){
+            fluid_synth_noteoff(synth.get(), j, i);
+        }
     }
 }

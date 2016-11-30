@@ -21,10 +21,10 @@
 #include "MIDI.h"
 #include "Viewport.h"
 
-NoteOn::NoteOn(Viewport* view, Track* track, unsigned long time, short value,
-           short velocity, int duration)
-           : Event(view, track, "NoteOn", time), value(value), velocity(velocity),
-             duration(duration)
+NoteOn::NoteOn(Viewport* view, Track* track, unsigned long time, short channel,
+               short value, short velocity, int duration)
+               : ChannelEvent(view, track, "NoteOn", time, channel),
+                 value(value), velocity(velocity), duration(duration)
 {}
 
 short NoteOn::getValue() const
@@ -46,7 +46,7 @@ void NoteOn::run()
 {
     char r, g, b;
     track->getColour(r, g, b);
-    view->getPlayback()->getSynth()->noteOn(value, velocity);
+    view->getPlayback()->getSynth()->noteOn(getChannel(), value, velocity);
     view->getKeyboard()->setKey(value, true, r, g, b);
     view->redraw();
 }
@@ -62,8 +62,9 @@ void NoteOn::draw()
     fl_rectf(x, y + 1, w, h - 1);
 }
 
-NoteOff::NoteOff(Viewport* view, Track* track, unsigned long time, short value)
-                 : Event(view, track, "NoteOff", time), value(value)
+NoteOff::NoteOff(Viewport* view, Track* track, unsigned long time, short channel,
+                 short value)
+                 : ChannelEvent(view, track, "NoteOff", time, channel), value(value)
 {}
 
 short NoteOff::getValue() const
@@ -73,7 +74,7 @@ short NoteOff::getValue() const
 
 void NoteOff::run()
 {
-    view->getPlayback()->getSynth()->noteOff(value);
+    view->getPlayback()->getSynth()->noteOff(getChannel(), value);
     view->getKeyboard()->setKey(value, false, 0, 0, 0);
     view->redraw();
 }
@@ -82,6 +83,24 @@ void NoteOff::draw()
 {}
 
 Track::Track() : r(255), g(255), b(255)
+{}
+
+ProgramChange::ProgramChange(Viewport* view, Track* track, unsigned long time,
+                             short channel, short voice)
+                             : ChannelEvent(view, track, "ProgramChange", time, channel), voice(voice)
+{}
+
+short ProgramChange::getVoice() const
+{
+    return voice;
+}
+
+void ProgramChange::run()
+{
+    view->getPlayback()->getSynth()->programChange(getChannel(), voice);
+}
+
+void ProgramChange::draw()
 {}
 
 unsigned long Track::getDuration() const

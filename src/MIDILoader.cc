@@ -81,6 +81,7 @@ void MIDILoader::loadTrack(Track* midi_data_track)
         //noteOn with non-zero velocity
         if (ev->type == EV_NOTE_ON && static_cast<MIDIChannelEventData*>(ev->data)->param2){
             NoteOn* tmp = new NoteOn(view, midi_data_track, time,
+                                     static_cast<MIDIChannelEventData*>(ev->data)->channel,
                                      static_cast<MIDIChannelEventData*>(ev->data)->param1,
                                      static_cast<MIDIChannelEventData*>(ev->data)->param2,
                                      0);
@@ -88,9 +89,11 @@ void MIDILoader::loadTrack(Track* midi_data_track)
             midi_data_track->addEvent(std::shared_ptr<Event>(tmp));
         //NoteOffs
         } else if (ev->type == EV_NOTE_ON || ev->type == EV_NOTE_OFF){
+            short channel = static_cast<MIDIChannelEventData*>(ev->data)->channel;
             short value = static_cast<MIDIChannelEventData*>(ev->data)->param1;
             midi_data_track->addEvent(
-                    std::shared_ptr<Event>(new NoteOff(view, midi_data_track, time, value)));
+                    std::shared_ptr<Event>(new NoteOff(view, midi_data_track, time,
+                                                       channel, value)));
 
             int size = note_ons.size();
             for (int i = 0; i < size; i++){
@@ -100,6 +103,12 @@ void MIDILoader::loadTrack(Track* midi_data_track)
                     break;
                 }
             }
+        } else if (ev->type == EV_PROGRAM_CHANGE){
+            short channel = static_cast<MIDIChannelEventData*>(ev->data)->channel;
+            short voice = static_cast<MIDIChannelEventData*>(ev->data)->param1;
+            midi_data_track->addEvent(
+                    std::shared_ptr<Event>(new ProgramChange(view, midi_data_track, time,
+                                                             channel, voice)));
         } else if (ev->type == META_TEMPO_CHANGE){
             conversion = MIDIHeader_getTempoConversion(&midi_file.header, *(uint32_t*)(ev->data));
         }

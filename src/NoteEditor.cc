@@ -100,7 +100,7 @@ void NoteEditor::resize(int w, int h)
 void NoteEditor::mouseDown(int mouse_x, int mouse_y)
 {
     long time = getMsPerPixel() * (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
-    drag_note.reset(new NoteOn(view, view->getMIDIData()->getTrack(0), time, noteFromPos(mouse_y), 100, 20));
+    drag_note.reset(new NoteOn(view, view->getMIDIData()->getTrack(0), time, 0, noteFromPos(mouse_y), 100, 20));
     if (time > 0){
         view->getMIDIData()->getTrack(0)->addEvent(drag_note);
     }
@@ -119,7 +119,7 @@ void NoteEditor::mouseRelease(int mouse_x, int mouse_y)
 {
     if (drag_note){
         long time = getMsPerPixel() *  (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
-        std::shared_ptr<Event> ev(new NoteOff(view, view->getMIDIData()->getTrack(0), time, static_cast<NoteOn*>(drag_note.get())->getValue()));
+        std::shared_ptr<Event> ev(new NoteOff(view, view->getMIDIData()->getTrack(0), time, 0, static_cast<NoteOn*>(drag_note.get())->getValue()));
         if (time > drag_note->getTime() + 10){
             view->getMIDIData()->getTrack(0)->addEvent(ev);
         } else {

@@ -54,9 +54,22 @@ private:
     unsigned long time;
 };
 
-class NoteOn : public Event {
+class ChannelEvent : public Event {
 public:
-    NoteOn(Viewport* view, Track* track, unsigned long time, short value,
+    ChannelEvent(Viewport* view, Track* track, std::string type,
+                 unsigned long time, short channel)
+                 : Event(view, track, type, time), channel(channel) {}
+    virtual ~ChannelEvent(){}
+
+    short getChannel() const { return channel; }
+
+private:
+    short channel;
+};
+
+class NoteOn : public ChannelEvent {
+public:
+    NoteOn(Viewport* view, Track* track, unsigned long time, short channel, short value,
          short velocity, int duration);
 
     short getValue() const;
@@ -66,15 +79,16 @@ public:
     virtual void draw();
 
 private:
+    short channel;
     short value;
     short velocity;
     //time until associated noteOff event, stored to simplify drawing
     int duration;
 };
 
-class NoteOff : public Event {
+class NoteOff : public ChannelEvent {
 public:
-    NoteOff(Viewport* view, Track *track, unsigned long time, short value);
+    NoteOff(Viewport* view, Track *track, unsigned long time, short channel, short value);
 
     short getValue() const;
     virtual void run();
@@ -82,6 +96,18 @@ public:
 
 private:
     short value;
+};
+
+class ProgramChange : public ChannelEvent {
+public:
+    ProgramChange(Viewport* view, Track *track, unsigned long time, short channel, short voice);
+
+    short getVoice() const;
+    virtual void run();
+    virtual void draw();
+
+private:
+    short voice;
 };
 
 class Track {

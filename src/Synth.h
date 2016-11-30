@@ -33,8 +33,9 @@ public:
     void reload(std::string driver, std::string sf_file);
     std::string getDriver();
     std::string getSF();
-    void noteOn(short value, int velocity);
-    void noteOff(short value);
+    void noteOn(short channel, short value, int velocity);
+    void noteOff(short channel, short value);
+    void programChange(short channel, short voice);
     void clear();
 
     class FluidInitFail : public std::exception {
