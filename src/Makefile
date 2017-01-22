@@ -1,6 +1,8 @@
 FLAGS = --std=c++11 -g
-FLFLAGS = `fltk-config --cxxflags`
-FLSTATIC = `fltk-config --ldstaticflags`
+DEFAULT_DRIVER = pulseaudio
+VERSION_STRING = "dev build"
+FLFLAGS = $(shell fltk-config --cxxflags) -DDEFAULT_DRIVER=\"$(DEFAULT_DRIVER)\" -DVERSION_STRING=\"$(VERSION_STRING)\"
+FLSTATIC = $(shell fltk-config --ldstaticflags)
 FLUID = -lfluidsynth
 
 

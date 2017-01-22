@@ -16,7 +16,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#define MINIMIDI_VERSION "dev build"
 #include <Fl/Fl_Window.H>
 #include <Fl/Fl_Text_Display.H>
 #include <Fl/Fl_Return_Button.H>
