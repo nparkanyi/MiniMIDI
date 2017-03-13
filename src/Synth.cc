@@ -21,11 +21,14 @@ Synth::Synth() : is_initialized(false)
 
 Synth::~Synth()
 {
+#ifndef _MSC_VER
     fluid_synth_sfunload(synth.get(), sf_handle, 0);
+#endif
 }
 
 void Synth::load(std::string driver, std::string sf_file)
 {
+#ifndef _MSC_VER
     settings.reset(new_fluid_settings(), delete_fluid_settings);
     synth.reset(new_fluid_synth(settings.get()), delete_fluid_synth);
     if (!synth){
@@ -47,14 +50,17 @@ void Synth::load(std::string driver, std::string sf_file)
     this->sf_file = sf_file;
     this->driver = driver;
     is_initialized = true;
+#endif
 }
 
 void Synth::reload(std::string driver, std::string sf_file)
 {
+#ifndef _MSC_VER
     adriver.reset();
     synth.reset();
     settings.reset();
     load(driver, sf_file);
+#endif
 }
 
 std::string Synth::getDriver()
@@ -69,24 +75,32 @@ std::string Synth::getSF()
 
 void Synth::noteOn(short channel, short value, int velocity)
 {
+#ifndef _MSC_VER
     fluid_synth_noteon(synth.get(), channel, value, velocity);
+#endif
 }
 
 void Synth::noteOff(short channel, short value)
 {
+#ifndef _MSC_VER
     fluid_synth_noteoff(synth.get(), channel, value);
+#endif
 }
 
 void Synth::programChange(short channel, short voice)
 {
+#ifndef _MSC_VER
     fluid_synth_program_change(synth.get(), channel, voice);
+#endif
 }
 
 void Synth::clear()
 {
+#ifndef _MSC_VER
     for (int i = 0; i <= 127; i++){
         for (int j = 0; j < 16; j++){
             fluid_synth_noteoff(synth.get(), j, i);
         }
     }
+#endif
 }

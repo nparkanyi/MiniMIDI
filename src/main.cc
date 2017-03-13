@@ -36,6 +36,7 @@ void loadPrefs()
     Fl::foreground(r, g, b);
 }
 
+
 int main(int argc, char** argv)
 {
     loadPrefs();
