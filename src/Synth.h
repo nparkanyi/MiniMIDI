@@ -19,9 +19,8 @@
 #include <string>
 #include <exception>
 #include <memory>
-#ifndef _MSC_VER
+
 #include <fluidsynth.h>
-#endif
 
 class Synth {
 public:
@@ -68,11 +67,9 @@ private:
     bool is_initialized;
     std::string driver;
     std::string sf_file;
-#ifndef _MSC_VER
     std::shared_ptr<fluid_settings_t> settings;
     std::shared_ptr<fluid_synth_t> synth;
     std::shared_ptr<fluid_audio_driver_t> adriver;
-#endif
     int sf_handle;
 };
 
