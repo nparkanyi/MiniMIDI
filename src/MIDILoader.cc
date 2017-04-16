@@ -73,8 +73,11 @@ void MIDILoader::loadTrack(Track* midi_data_track)
     MIDIEventIterator iter = MIDIEventList_get_start_iter(track->list);
     MIDIEvent* ev = MIDIEventList_get_event(iter);
     unsigned long time = 0;
-    std::vector<NoteOn*> note_ons; //store NoteOns so we can update their durations
+    std::vector<NoteOn*> note_ons(128); //store NoteOns so we can update their durations
                                    // when NoteOff is encountered.
+    for (int i = 0; i < 128; i++){
+      note_ons[i] = nullptr;
+    }
 
     while (ev->type != META_END_TRACK){
         time += ev->delta_time * conversion;
@@ -85,7 +88,7 @@ void MIDILoader::loadTrack(Track* midi_data_track)
                                      static_cast<MIDIChannelEventData*>(ev->data)->param1,
                                      static_cast<MIDIChannelEventData*>(ev->data)->param2,
                                      0);
-            note_ons.push_back(tmp);
+            note_ons[static_cast<MIDIChannelEventData*>(ev->data)->param1] = tmp;
             midi_data_track->addEvent(std::shared_ptr<Event>(tmp));
         //NoteOffs
         } else if (ev->type == EV_NOTE_ON || ev->type == EV_NOTE_OFF){
@@ -95,13 +98,9 @@ void MIDILoader::loadTrack(Track* midi_data_track)
                     std::shared_ptr<Event>(new NoteOff(view, midi_data_track, time,
                                                        channel, value)));
 
-            int size = note_ons.size();
-            for (int i = 0; i < size; i++){
-                if (note_ons[i]->getValue() == value){
-                    note_ons[i]->setDuration(time - note_ons[i]->getTime());
-                    note_ons.erase(note_ons.begin() + i);
-                    break;
-                }
+            if (note_ons[value]){
+              note_ons[value]->setDuration(time - note_ons[value]->getTime());
+              note_ons[value] = nullptr;
             }
         } else if (ev->type == EV_PROGRAM_CHANGE){
             short channel = static_cast<MIDIChannelEventData*>(ev->data)->channel;
