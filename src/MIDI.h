@@ -117,6 +117,7 @@ public:
     //returns the total duration of this track in ms
     unsigned long getDuration() const;
     void addEvent(std::shared_ptr<Event> ev);
+    void appendEvent(std::shared_ptr<Event> ev);
     void removeEvent(std::shared_ptr<Event> ev);
     //removes the NoteOn and NoteOff events of any note of this value occurring at time
     void removeNotesAt(unsigned long time, int value);

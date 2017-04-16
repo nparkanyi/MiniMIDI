@@ -17,6 +17,7 @@
 #include <cmath>
 #include <cstdio>
 #include <memory>
+#include <chrono>
 #include <Fl/fl_draw.H>
 #include <Fl/fl_ask.H>
 #include <Fl/Fl_Preferences.H>
@@ -195,10 +196,15 @@ int Viewport::handle(int event)
 
 void Viewport::cbEveryFrame(void* v)
 {
-    Viewport* view = static_cast<Viewport*>(v);
-    view->getPlayback()->everyFrame();
-    if (view->getPlayback()->isPlaying()){
-        view->redraw();
+    static std::chrono::time_point<std::chrono::steady_clock> last;
+    if (std::chrono::duration_cast<std::chrono::milliseconds>
+          (std::chrono::steady_clock::now() - last).count() >= 16){
+        Viewport* view = static_cast<Viewport*>(v);
+        view->getPlayback()->everyFrame();
+        if (view->getPlayback()->isPlaying()){
+            view->redraw();
+        }
+        last = std::chrono::steady_clock::now();
     }
     Fl::repeat_timeout(0.001, Viewport::cbEveryFrame, v);
 }

@@ -80,33 +80,33 @@ void MIDILoader::loadTrack(Track* midi_data_track)
     }
 
     while (ev->type != META_END_TRACK){
-        time += ev->delta_time * conversion;
+        time += (ev->delta_time * conversion);
         //noteOn with non-zero velocity
         if (ev->type == EV_NOTE_ON && static_cast<MIDIChannelEventData*>(ev->data)->param2){
-            NoteOn* tmp = new NoteOn(view, midi_data_track, time,
+            NoteOn* tmp = new NoteOn(view, midi_data_track, time / 1000,
                                      static_cast<MIDIChannelEventData*>(ev->data)->channel,
                                      static_cast<MIDIChannelEventData*>(ev->data)->param1,
                                      static_cast<MIDIChannelEventData*>(ev->data)->param2,
                                      0);
             note_ons[static_cast<MIDIChannelEventData*>(ev->data)->param1] = tmp;
-            midi_data_track->addEvent(std::shared_ptr<Event>(tmp));
+            midi_data_track->appendEvent(std::shared_ptr<Event>(tmp));
         //NoteOffs
         } else if (ev->type == EV_NOTE_ON || ev->type == EV_NOTE_OFF){
             short channel = static_cast<MIDIChannelEventData*>(ev->data)->channel;
             short value = static_cast<MIDIChannelEventData*>(ev->data)->param1;
-            midi_data_track->addEvent(
-                    std::shared_ptr<Event>(new NoteOff(view, midi_data_track, time,
+            midi_data_track->appendEvent(
+                    std::shared_ptr<Event>(new NoteOff(view, midi_data_track, time / 1000,
                                                        channel, value)));
 
             if (note_ons[value]){
-              note_ons[value]->setDuration(time - note_ons[value]->getTime());
+              note_ons[value]->setDuration(time / 1000 - note_ons[value]->getTime());
               note_ons[value] = nullptr;
             }
         } else if (ev->type == EV_PROGRAM_CHANGE){
             short channel = static_cast<MIDIChannelEventData*>(ev->data)->channel;
             short voice = static_cast<MIDIChannelEventData*>(ev->data)->param1;
-            midi_data_track->addEvent(
-                    std::shared_ptr<Event>(new ProgramChange(view, midi_data_track, time,
+            midi_data_track->appendEvent(
+                    std::shared_ptr<Event>(new ProgramChange(view, midi_data_track, time / 1000,
                                                              channel, voice)));
         } else if (ev->type == META_TEMPO_CHANGE){
             conversion = MIDIHeader_getTempoConversion(&midi_file.header, *(uint32_t*)(ev->data));

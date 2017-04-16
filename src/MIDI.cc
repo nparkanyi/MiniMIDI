@@ -83,7 +83,9 @@ void NoteOff::draw()
 {}
 
 Track::Track() : r(255), g(255), b(255)
-{}
+{
+    //events.reserve();
+}
 
 ProgramChange::ProgramChange(Viewport* view, Track* track, unsigned long time,
                              short channel, short voice)
@@ -123,6 +125,11 @@ void Track::addEvent(std::shared_ptr<Event> ev)
     } else {
         events.push_back(ev);
     }
+}
+
+void Track::appendEvent(std::shared_ptr<Event> ev)
+{
+    events.push_back(ev);
 }
 
 void Track::removeEvent(std::shared_ptr<Event> ev)
