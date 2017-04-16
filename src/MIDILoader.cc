@@ -56,7 +56,7 @@ void deleteLibmidiTrack(MIDITrack* trk)
 
 void MIDILoader::loadTrack(Track* midi_data_track)
 {
-    float conversion = MIDIHeader_getTempoConversion(&midi_file.header, 500000);
+    uint32_t conversion = MIDIHeader_getTempoConversion(&midi_file.header, 500000);
     MIDITrack track_;
     std::shared_ptr<MIDITrack> track(&track_, MIDITrack_delete_events);
 
