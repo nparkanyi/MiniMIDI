@@ -91,7 +91,7 @@ Synth::Synth() : is_initialized(false)
             "MiniMIDI: Warning", MB_OK | MB_ICONWARNING);
     }
 #else
-    fluid_loaded = true;
+    fluidloaded = true;
     __fluid_synth_sfload = fluid_synth_sfload;
     __fluid_synth_sfunload = fluid_synth_sfunload;
     __new_fluid_settings = new_fluid_settings;
