@@ -342,19 +342,15 @@ void MIDIData::newTrack()
 	int r_bank[] = {241, 15, 15, 255, 15, 15, 255, 241};
 	int g_bank[] = {25, 91, 255, 78, 255, 147, 255, 25};
 	int b_bank[] = {10, 255, 15, 15, 255, 15, 15, 196};
-	static int r = 0;
-	static int g = 0;
-	static int b = 0;
+	static int idx = 0;
 
 
 
     tracks.push_back(Track());
-    tracks[tracks.size() - 1].setColour(r_bank[r], g_bank[g], b_bank[b]);
+    tracks[tracks.size() - 1].setColour(r_bank[idx], g_bank[idx], b_bank[idx]);
 
 	//generate new colour for next track
-	r = (r + 1) % 8;
-	g = (g + 1) % 8;
-	b = (b + 1) % 8;
+	idx = (idx + 1) % 8;
 }
 
 void MIDIData::clear()
