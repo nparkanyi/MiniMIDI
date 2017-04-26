@@ -1,0 +1,5 @@
+- select track to edit
+- save changes (libmidi)
+- no compiler warnings
+- more efficient drawing routines
+- multithreaded loading
