@@ -47,6 +47,8 @@ public:
     void getNotePos(int note_value, unsigned long time, int &x, int &y) const;
     //returns the thickness of this note
     int getNoteThickness(int note_value) const;
+    //set which track we are editing
+    void setTrack(int track_num);
 
     //data should be set to view
     static void cbSeeker(Fl_Widget* w, void* data);
@@ -65,6 +67,7 @@ private:
     Fl_Slider* seeker;
     int note_thickness;
     int ms_per_pixel;
+    int track_num;
 
     std::shared_ptr<Event> drag_note;
 };

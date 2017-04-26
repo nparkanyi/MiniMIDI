@@ -29,7 +29,7 @@
 #define SEEKERHEIGHT 20
 
 NoteEditor::NoteEditor(int x, int y, int w, int h, Viewport* view) : x(x), y(y), w(w), h(h),
-                       view(view), note_thickness(10), ms_per_pixel(10)
+                       view(view), note_thickness(10), ms_per_pixel(10), track_num(0)
 {
     scroll_vert = new Fl_Scrollbar(x + w - SCROLLWIDTH - 2, y + 1, SCROLLWIDTH, h - 2);
     scroll_vert->value(40, 30, 0, 127);
@@ -100,9 +100,9 @@ void NoteEditor::resize(int w, int h)
 void NoteEditor::mouseDown(int mouse_x, int mouse_y)
 {
     long time = getMsPerPixel() * (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
-    drag_note.reset(new NoteOn(view, view->getMIDIData()->getTrack(0), time, 0, noteFromPos(mouse_y), 100, 20));
+    drag_note.reset(new NoteOn(view, view->getMIDIData()->getTrack(track_num), time, 0, noteFromPos(mouse_y), 100, 20));
     if (time > 0){
-        view->getMIDIData()->getTrack(0)->addEvent(drag_note);
+        view->getMIDIData()->getTrack(track_num)->addEvent(drag_note);
     }
 }
 
@@ -119,12 +119,12 @@ void NoteEditor::mouseRelease(int mouse_x, int mouse_y)
 {
     if (drag_note){
         long time = getMsPerPixel() *  (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
-        std::shared_ptr<Event> ev(new NoteOff(view, view->getMIDIData()->getTrack(0), time, 0, static_cast<NoteOn*>(drag_note.get())->getValue()));
+        std::shared_ptr<Event> ev(new NoteOff(view, view->getMIDIData()->getTrack(track_num), time, 0, static_cast<NoteOn*>(drag_note.get())->getValue()));
         if (time > drag_note->getTime() + 10){
-            view->getMIDIData()->getTrack(0)->addEvent(ev);
+            view->getMIDIData()->getTrack(track_num)->addEvent(ev);
         } else {
             //user tried to drag left of note start; invalid, so we remove the NoteOn added earlier
-            view->getMIDIData()->getTrack(0)->removeEvent(drag_note);
+            view->getMIDIData()->getTrack(track_num)->removeEvent(drag_note);
         }
         drag_note.reset();
     }
@@ -135,7 +135,7 @@ void NoteEditor::rightRelease(int mouse_x, int mouse_y)
     long time = getMsPerPixel() * (mouse_x - x - BAROFFSET) + static_cast<signed long>(view->getPlayback()->getTime());
     int value = noteFromPos(mouse_y);
     if (time > 0){
-        view->getMIDIData()->getTrack(0)->removeNotesAt(time, value);
+        view->getMIDIData()->getTrack(track_num)->removeNotesAt(time, value);
     }
     view->redraw();
 }
@@ -182,6 +182,11 @@ int NoteEditor::getNoteThickness(int note_value) const
     } else {
         return note_thickness + 4;
     }
+}
+
+void NoteEditor::setTrack(int track_num)
+{
+    this->track_num = track_num;
 }
 
 void NoteEditor::cbSeeker(Fl_Widget* w, void* v)
