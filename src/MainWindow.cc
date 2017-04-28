@@ -20,6 +20,8 @@
 #include <Fl/Fl_Button.H>
 #include <Fl/fl_draw.H>
 #include <Fl/fl_ask.H>
+#include <cassert>
+#include <sstream>
 #include "MainWindow.h"
 #include "MIDILoader.h"
 #include "notes_pixmap.h"
@@ -94,6 +96,48 @@ void PlaybackControls::cbEveryFrame(void* v)
     Fl::repeat_timeout(0.001, PlaybackControls::cbEveryFrame, v);
 }
 
+EditControls::EditControls(int x, int y, Viewport *view) :
+                           view(view), Fl_Group(x, y, 100, 30)
+{
+    resizable(NULL);
+
+    Fl_Menu_Item tracks[] = {{"Track 0", 0, 0, 0},
+                            { 0}};
+    track_select = new Fl_Choice(x, y, 100, 30);
+    track_select->copy(tracks);
+    track_select->callback(cbTrackSelect, view);
+}
+
+void EditControls::resize(int x, int y, int w, int h)
+{
+    //prevent group from resizing smaller than the widgets
+    Fl_Group::resize(x, y, 100, 30);
+}
+
+void EditControls::update()
+{
+    int ntracks = view->getMIDIData()->numTracks();
+    std::ostringstream oss;
+
+    track_select->clear();
+    for (int i = 0; i < ntracks; i++){
+        oss = std::ostringstream();
+        oss << std::string("Track ") << i;
+        track_select->add(oss.str().c_str(), 0, 0, 0, 0);
+    }
+    track_select->value(0);
+    track_select->redraw();
+}
+
+void EditControls::cbTrackSelect(Fl_Widget* w, void* v)
+{
+    int value = static_cast<Fl_Choice*>(w)->value();
+    Viewport* view = static_cast<Viewport*>(v);
+
+    assert(view->getMIDIData()->numTracks() > value);
+    view->getEditor()->setTrack(value);
+}
+
 MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
 {
     label("MiniMIDI");
@@ -130,6 +174,8 @@ MainWindow::MainWindow() : Fl_Double_Window(RES_X, RES_Y)
     controls = new PlaybackControls(RES_X / 2 - 70, RES_Y - 80, view);
     controls->end();
 
+    editctl = new EditControls(RES_X / 2 - 270, RES_Y - 80, view);
+    editctl->end();
     midi_chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
     midi_chooser.title("Choose MIDI file");
     midi_chooser.filter("MIDI Files\t*.mid");
@@ -148,6 +194,7 @@ void MainWindow::resize(int x, int y, int w, int h)
     Fl_Double_Window::resize(x, y, w, h);
     //keep the playback controls centred
     controls->position(w / 2 - 70, controls->y());
+    editctl->position(w / 2 - 270, editctl->y());
 }
 
 
@@ -166,9 +213,10 @@ void MainWindow::cbSettings(Fl_Widget* w, void* v)
 void MainWindow::cbOpenMIDIFile(Fl_Widget* w, void* v)
 {
     MainWindow* mw = static_cast<MainWindow*>(v);
+    Track* trk = mw->view->getMIDIData()->getTrack(0);
 
     switch (mw->midi_chooser.show()){
-        case -1: 
+        case -1:
             fl_alert(mw->midi_chooser.errmsg());
 	    break;
 	case 1: //user cancelled
@@ -187,6 +235,8 @@ void MainWindow::cbOpenMIDIFile(Fl_Widget* w, void* v)
     } catch (std::exception &e){
         fl_alert(e.what());
     }
+    //update the editor controls with new file's info
+    mw->editctl->update();
     mw->view->redraw();
 }
 

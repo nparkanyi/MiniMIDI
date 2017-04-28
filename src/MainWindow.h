@@ -42,6 +42,20 @@ private:
     static void cbEveryFrame(void* v);
 };
 
+class EditControls : public Fl_Group {
+public:
+    EditControls(int x, int y, Viewport *view);
+    virtual void resize(int x, int y,  int w, int h);
+    //update editor info like number of tracks
+    void update();
+
+private:
+    Viewport* view;
+    Fl_Choice* track_select;
+
+    //v is Viewport pointer
+    static void cbTrackSelect(Fl_Widget* w, void* v);
+};
 
 class MainWindow : public Fl_Double_Window {
 public:
@@ -59,6 +73,7 @@ private:
     Fl_Menu_Bar* menu;
     Viewport* view;
     PlaybackControls* controls;
+    EditControls* editctl;
     AboutDialog* about_dialog;
     SettingsDialog* settings_dialog;
     Fl_Native_File_Chooser midi_chooser; //statically alloc'd since it's not a widget
