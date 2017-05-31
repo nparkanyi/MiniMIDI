@@ -40,7 +40,7 @@ public:
     };
 
 private:
-    void loadTrack(Track* midi_data_track);
+    void loadTrack(Track* midi_data_track, int tracknum);
 
     std::string filename;
     Viewport* view;

@@ -14,8 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <vector>
 #include <sstream>
 #include <memory>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 #include "Viewport.h"
 #include "MIDI.h"
 #include "MIDILoader.h"
@@ -40,11 +44,20 @@ MIDILoader::~MIDILoader()
     MIDIFile_delete(&midi_file);
 }
 
+
 void MIDILoader::load()
 {
-    for (int i = 0; i < midi_file.header.num_tracks; i++){
+    std::vector<std::thread> workers(midi_file.header.num_tracks);
+    for (int i = 0; i < midi_file.header.num_tracks; i++) {
         view->getMIDIData()->newTrack();
-        loadTrack(view->getMIDIData()->getTrack(i));
+    }
+    for (int i = 0; i < midi_file.header.num_tracks; i++){
+        workers[i] = std::thread(&MIDILoader::loadTrack, this,
+                                 view->getMIDIData()->getTrack(i), i);
+    }
+
+    for (auto &t : workers) {
+        t.join();
     }
 }
 
@@ -54,13 +67,37 @@ void deleteLibmidiTrack(MIDITrack* trk)
     delete trk;
 }
 
-void MIDILoader::loadTrack(Track* midi_data_track)
+void MIDILoader::loadTrack(Track* midi_data_track, int tracknum)
 {
-    uint32_t conversion = MIDIHeader_getTempoConversion(&midi_file.header, 500000);
+    MIDIFile new_midi; //each thread needs its own separate MIDIFile handler
+    //locally reopen the same file
+    int r = MIDIFile_load(&new_midi, filename.c_str());
+    switch (r) {
+        case MIDIError::FILE_IO_ERROR:
+            throw LibmidiError(std::string("Failed to open file!"));
+        case MIDIError::FILE_INVALID:
+            throw LibmidiError(std::string("Invalid MIDI file!"));
+        case MIDIError::MEMORY_ERROR:
+            throw LibmidiError(std::string("Memory allocation error!"));
+    }
+
+    //skip to the correct track
+    for (int i = 0; i < tracknum; i++) {
+        r = MIDITrack_skip(new_midi.file);
+        switch (r) {
+            case MIDIError::FILE_IO_ERROR:
+                throw LibmidiError(std::string("File IO error!"));
+            case MIDIError::FILE_INVALID:
+                throw LibmidiError(std::string("Invalid MIDI file!"));
+        }
+    }
+
+    //now load the actual track
+    uint32_t conversion = MIDIHeader_getTempoConversion(&new_midi.header, 500000);
     MIDITrack track_;
     std::shared_ptr<MIDITrack> track(&track_, MIDITrack_delete_events);
 
-    int r = MIDITrack_load(track.get(), midi_file.file);
+    r = MIDITrack_load(track.get(), new_midi.file);
     switch (r){
         case MIDIError::FILE_INVALID:
             throw LibmidiError(std::string("Invalid track data!"));
@@ -109,10 +146,12 @@ void MIDILoader::loadTrack(Track* midi_data_track)
                     std::shared_ptr<Event>(new ProgramChange(view, midi_data_track, time / 1000,
                                                              channel, voice)));
         } else if (ev->type == META_TEMPO_CHANGE){
-            conversion = MIDIHeader_getTempoConversion(&midi_file.header, *(uint32_t*)(ev->data));
+            conversion = MIDIHeader_getTempoConversion(&new_midi.header, *(uint32_t*)(ev->data));
         }
 
         iter = MIDIEventList_next_event(iter);
         ev = MIDIEventList_get_event(iter);
     }
+
+    MIDIFile_delete(&new_midi);
 }
