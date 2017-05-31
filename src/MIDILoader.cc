@@ -45,6 +45,9 @@ MIDILoader::~MIDILoader()
 }
 
 
+std::mutex t_err_mutex;
+int t_err = MIDIError::SUCCESS;
+
 void MIDILoader::load()
 {
     std::vector<std::thread> workers(midi_file.header.num_tracks);
@@ -59,6 +62,21 @@ void MIDILoader::load()
     for (auto &t : workers) {
         t.join();
     }
+
+    {
+        std::lock_guard<std::mutex> lk(t_err_mutex);
+        switch (t_err) {
+        case MIDIError::FILE_INVALID:
+            t_err = MIDIError::SUCCESS;
+            throw LibmidiError(std::string("Invalid MIDI file in worker thread!"));
+        case MIDIError::FILE_IO_ERROR:
+            t_err = MIDIError::SUCCESS;
+            throw LibmidiError(std::string("File IO error in worker thread!"));
+        case MIDIError::MEMORY_ERROR:
+            t_err = MIDIError::SUCCESS;
+            throw LibmidiError(std::string("Memory allocation error in worker thread!"));
+        }
+    }
 }
 
 void deleteLibmidiTrack(MIDITrack* trk)
@@ -72,39 +90,36 @@ void MIDILoader::loadTrack(Track* midi_data_track, int tracknum)
     MIDIFile new_midi; //each thread needs its own separate MIDIFile handler
     //locally reopen the same file
     int r = MIDIFile_load(&new_midi, filename.c_str());
-    switch (r) {
-        case MIDIError::FILE_IO_ERROR:
-            throw LibmidiError(std::string("Failed to open file!"));
-        case MIDIError::FILE_INVALID:
-            throw LibmidiError(std::string("Invalid MIDI file!"));
-        case MIDIError::MEMORY_ERROR:
-            throw LibmidiError(std::string("Memory allocation error!"));
+    if (r != MIDIError::SUCCESS) {
+        std::lock_guard<std::mutex> lk(t_err_mutex);
+        t_err = r;
+        std::fclose(new_midi.file);
+        return;
     }
 
     //skip to the correct track
     for (int i = 0; i < tracknum; i++) {
         r = MIDITrack_skip(new_midi.file);
-        switch (r) {
-            case MIDIError::FILE_IO_ERROR:
-                throw LibmidiError(std::string("File IO error!"));
-            case MIDIError::FILE_INVALID:
-                throw LibmidiError(std::string("Invalid MIDI file!"));
+        if (r != MIDIError::SUCCESS) {
+            std::lock_guard<std::mutex> lk(t_err_mutex);
+            t_err = r;
+            std::fclose(new_midi.file);
+            return;
         }
     }
 
     //now load the actual track
     uint32_t conversion = MIDIHeader_getTempoConversion(&new_midi.header, 500000);
     MIDITrack track_;
+    track_.list = nullptr;
     std::shared_ptr<MIDITrack> track(&track_, MIDITrack_delete_events);
 
     r = MIDITrack_load(track.get(), new_midi.file);
-    switch (r){
-        case MIDIError::FILE_INVALID:
-            throw LibmidiError(std::string("Invalid track data!"));
-        case MIDIError::FILE_IO_ERROR:
-            throw LibmidiError(std::string("File IO error!"));
-        case MIDIError::MEMORY_ERROR:
-            throw LibmidiError(std::string("Failed to allocate memory!"));
+    if (r != MIDIError::SUCCESS) {
+        std::lock_guard<std::mutex> lk(t_err_mutex);
+        t_err = r;
+        std::fclose(new_midi.file);
+        return;
     }
 
     MIDIEventIterator iter = MIDIEventList_get_start_iter(track->list);
