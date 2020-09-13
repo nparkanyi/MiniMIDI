@@ -21,12 +21,12 @@
 #include <iostream>
 
 typedef int (*PtrFluidSynthSfload)(fluid_synth_t*, const char*, int);
-typedef int (*PtrFluidSynthSfunload)(fluid_synth_t*, unsigned int id, int reset_presets);
+typedef int (*PtrFluidSynthSfunload)(fluid_synth_t*, int id, int reset_presets);
 typedef fluid_settings_t* (*PtrNewFluidSettings)(void);
 typedef void (*PtrDeleteFluidSettings)(fluid_settings_t*);
 typedef int (*PtrFluidSettingsSetstr)(fluid_settings_t*, const char*, const char*);
 typedef fluid_synth_t* (*PtrNewFluidSynth)(fluid_settings_t* settings);
-typedef int (*PtrDeleteFluidSynth)(fluid_synth_t*);
+typedef void (*PtrDeleteFluidSynth)(fluid_synth_t*);
 typedef fluid_audio_driver_t* (*PtrNewFluidAudioDriver)(fluid_settings_t*, fluid_synth_t*);
 typedef void (*PtrDeleteFluidAudioDriver)(fluid_audio_driver_t*);
 typedef int (*PtrFluidSynthNoteon)(fluid_synth_t*, int, int, int);
