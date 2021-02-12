@@ -24,12 +24,16 @@ add_executable(MiniMIDI ${MiniMIDI_SRCS})
 
 add_library(midi src/libmidi/libmidi.c)
 
+set(FLTK_SKIP_OPENGL True)
+set(FLTK_SKIP_FLUID True)
+
 find_package(FLTK MODULE REQUIRED) # Legacy-style CMake module
 find_package(Threads MODULE REQUIRED)
 
 target_include_directories(MiniMIDI PUBLIC
     "${PROJECT_BINARY_DIR}"
-    "${PROJECT_SRC_DIR}/src/libmidi")
+    "${PROJECT_SRC_DIR}/src/libmidi"
+    ${FLTK_INCLUDE_DIR})
 
 # TODO: need a proper CMake module for fluidsynth,
 # as-is just blindly plunks '-lfluidsynth'
